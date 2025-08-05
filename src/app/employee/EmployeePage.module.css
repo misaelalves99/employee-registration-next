@@ -1,0 +1,169 @@
+/* Container geral centralizado */
+.container {
+  max-width: 90rem; /* max-w-7xl */
+  font-family: 'Inter', sans-serif;
+  color: #374151; /* gray-700 */
+}
+
+/* Título fixo no topo */
+.title {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700;
+  user-select: none;
+  margin-bottom: 1rem;
+}
+
+/* Wrapper que envolve filtro e conteúdo direito */
+.contentWrapper {
+  display: flex;
+  gap: 1.5rem;
+}
+
+/* Sidebar filtro */
+.sidebar {
+  width: 16rem; /* w-64 */
+  padding: 1rem;
+  background-color: #f3f4f6; /* gray-100 */
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-radius: 0.5rem;
+  user-select: none;
+}
+
+/* Seção direita que engloba topo (botão + busca) e tabela */
+.rightSection {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Linha com botão e barra de busca ao lado, acima da tabela */
+.topBar {
+  display: flex;
+  justify-content: space-between; /* botão à esquerda, input à direita */
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* Botão Novo Funcionário */
+.btnPrimary {
+  background-color: #2563eb; /* blue-600 */
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  border: none;
+  flex-shrink: 0; /* botão não encolhe */
+}
+
+.btnPrimary:hover {
+  background-color: #1d4ed8; /* blue-700 */
+}
+
+.searchInput {
+  width: 20rem; /* largura fixa padrão */
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #9ca3af; /* gray-400 */
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  outline-offset: 2px;
+  transition: border-color 0.2s ease;
+  user-select: text;
+  min-width: 0;
+  flex-grow: 0;
+}
+
+.searchInput:focus {
+  border-color: #2563eb; /* blue-600 */
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
+}
+
+/* Texto sem resultado */
+.noResults {
+  color: #6b7280; /* gray-500 */
+  user-select: none;
+}
+
+/* Tabela */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #d1d5db; /* gray-300 */
+  user-select: none;
+}
+
+.thead {
+  background-color: #1f2937; /* gray-800 */
+  color: white;
+}
+
+.th, .td {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: middle;
+  font-size: 0.875rem;
+}
+
+.trHover:hover {
+  background-color: #f9fafb; /* gray-50 */
+}
+
+/* Ações - botões */
+.actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  color: white;
+  user-select: none;
+}
+
+/* Botões coloridos */
+.btnInfo {
+  background-color: #3b82f6; /* blue-400 */
+}
+.btnInfo:hover {
+  background-color: #2563eb; /* blue-600 */
+}
+
+.btnWarning {
+  background-color: #fbbf24; /* yellow-400 */
+  color: #1f2937;
+}
+.btnWarning:hover {
+  background-color: #f59e0b; /* yellow-500 */
+  color: white;
+}
+
+.btnSecondary {
+  background-color: #6b7280; /* gray-500 */
+}
+.btnSecondary:hover {
+  background-color: #4b5563; /* gray-600 */
+}
+
+.btnSuccess {
+  background-color: #22c55e; /* green-500 */
+}
+.btnSuccess:hover {
+  background-color: #16a34a; /* green-600 */
+}
+
+.btnDanger {
+  background-color: #ef4444; /* red-500 */
+}
+.btnDanger:hover {
+  background-color: #dc2626; /* red-600 */
+}

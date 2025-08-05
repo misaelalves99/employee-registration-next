@@ -1,0 +1,38 @@
+.button {
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  min-width: 90px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  user-select: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Status ativo - botão para inativar */
+.inactive {
+  background-color: #ef4444; /* red-500 */
+  color: white;
+}
+
+.inactive:hover:not(:disabled) {
+  background-color: #dc2626; /* red-600 */
+}
+
+/* Status inativo - botão para ativar */
+.active {
+  background-color: #22c55e; /* green-500 */
+  color: white;
+}
+
+.active:hover:not(:disabled) {
+  background-color: #16a34a; /* green-600 */
+}

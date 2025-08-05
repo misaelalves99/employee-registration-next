@@ -1,0 +1,99 @@
+.container {
+  max-width: 32rem; /* max-w-lg */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem 1rem; /* px-4 py-6 */
+  font-family: 'Inter', sans-serif;
+  color: #1f2937; /* gray-800 */
+}
+
+.title {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700;
+  margin-bottom: 1.5rem; /* mb-6 */
+  user-select: none;
+}
+
+.errorContainer {
+  margin-bottom: 1rem; /* mb-4 */
+  color: #dc2626; /* red-600 */
+  font-weight: 600;
+}
+
+.errorText {
+  margin: 0.25rem 0;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* space-y-4 */
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.label {
+  font-weight: 600;
+  margin-bottom: 0.25rem; /* mb-1 */
+  user-select: none;
+}
+
+.input {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db; /* gray-300 */
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #2563eb; /* blue-600 */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.4); /* blue focus ring */
+}
+
+.checkboxContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+  font-weight: 600;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.75rem; /* gap-3 */
+}
+
+.btn {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  cursor: pointer;
+  user-select: none;
+  border: none;
+  text-align: center;
+  transition: background-color 0.2s ease;
+}
+
+.btnPrimary {
+  background-color: #2563eb; /* blue-600 */
+  color: white;
+}
+
+.btnPrimary:hover {
+  background-color: #1d4ed8; /* blue-700 */
+}
+
+.btnSecondary {
+  background-color: #9ca3af; /* gray-400 */
+  color: white;
+}
+
+.btnSecondary:hover {
+  background-color: #6b7280; /* gray-500 */
+}

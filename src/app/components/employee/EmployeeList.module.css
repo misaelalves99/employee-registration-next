@@ -1,0 +1,88 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.thead {
+  background-color: #1f2937; /* gray-800 */
+  color: white;
+  text-align: left;
+}
+
+.th,
+.td {
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
+}
+
+.trHover:hover {
+  background-color: #f3f4f6; /* gray-100 */
+}
+
+.actions {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  border-radius: 0.375rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  color: white;
+  user-select: none;
+  display: inline-block;
+  text-align: center;
+  min-width: 60px;
+}
+
+.btnInfo {
+  background-color: #3b82f6; /* blue-500 */
+}
+
+.btnInfo:hover {
+  background-color: #2563eb; /* blue-600 */
+}
+
+.btnWarning {
+  background-color: #f59e0b; /* amber-500 */
+  color: #1f2937; /* gray-800 */
+}
+
+.btnWarning:hover {
+  background-color: #d97706; /* amber-600 */
+  color: white;
+}
+
+.btnSecondary {
+  background-color: #6b7280; /* gray-500 */
+}
+
+.btnSecondary:hover {
+  background-color: #4b5563; /* gray-600 */
+}
+
+.btnSuccess {
+  background-color: #22c55e; /* green-500 */
+}
+
+.btnSuccess:hover {
+  background-color: #16a34a; /* green-600 */
+}
+
+.btnDanger {
+  background-color: #ef4444; /* red-500 */
+}
+
+.btnDanger:hover {
+  background-color: #dc2626; /* red-600 */
+}

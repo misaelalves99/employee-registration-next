@@ -1,0 +1,97 @@
+.container {
+  max-width: 42rem; /* max-w-2xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem;
+  font-family: 'Inter', sans-serif;
+  color: #111827; /* gray-900 */
+}
+
+.title {
+  font-size: 1.875rem; /* text-3xl */
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  user-select: none;
+}
+
+.card {
+  background-color: #fff;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+  border: 1px solid #e5e7eb; /* gray-200 */
+  border-radius: 0.75rem; /* rounded */
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: #374151; /* gray-700 */
+  font-weight: 500;
+  user-select: text;
+}
+
+.label {
+  font-weight: 600;
+  color: #111827; /* gray-900 */
+}
+
+.buttonGroup {
+  margin-top: 1.5rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
+.btnPrimary {
+  background-color: #2563eb; /* blue-600 */
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnPrimary:hover {
+  background-color: #1d4ed8; /* blue-700 */
+}
+
+.btnSecondary {
+  background-color: #9ca3af; /* gray-400 */
+  color: white;
+  padding: 0.5rem 1.5rem;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btnSecondary:hover {
+  background-color: #6b7280; /* gray-500 */
+}
+
+.notFoundContainer {
+  max-width: 20rem; /* max-w-xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem;
+  text-align: center;
+  color: #dc2626; /* red-600 */
+}
+
+.notFoundTitle {
+  font-weight: 700;
+  font-size: 1.5rem; /* text-2xl */
+  margin-bottom: 1rem;
+  user-select: none;
+}

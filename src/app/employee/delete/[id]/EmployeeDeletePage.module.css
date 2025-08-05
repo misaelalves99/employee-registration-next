@@ -1,0 +1,94 @@
+.container {
+  max-width: 36rem; /* max-w-xl */
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1.5rem; /* p-6 */
+  background-color: #ffffff;
+  border-radius: 0.5rem; /* rounded */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow */
+  margin-top: 1.5rem; /* mt-6 */
+  font-family: 'Inter', sans-serif;
+  color: #1f2937; /* gray-800 */
+}
+
+.title {
+  font-size: 1.5rem; /* text-2xl */
+  font-weight: 700;
+  margin-bottom: 1rem; /* mb-4 */
+  color: #dc2626; /* red-600 */
+  user-select: none;
+}
+
+.message {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+.detailsBox {
+  background-color: #f9fafb; /* gray-50 */
+  border-radius: 0.375rem; /* rounded */
+  border: 1px solid #e5e7eb; /* border */
+  padding: 1rem; /* p-4 */
+  margin-top: 1rem;
+  color: #374151; /* gray-700 */
+  user-select: none;
+}
+
+.detailsBox p {
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.btnDelete {
+  background-color: #dc2626; /* red-600 */
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.btnDelete:hover {
+  background-color: #b91c1c; /* red-700 */
+}
+
+.btnCancel {
+  background-color: #d1d5db; /* gray-300 */
+  color: #111827; /* gray-900 */
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.btnCancel:hover {
+  background-color: #9ca3af; /* gray-400 */
+}
+
+.loading,
+.error {
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  user-select: none;
+}
+
+.loading {
+  color: #6b7280; /* gray-500 */
+}
+
+.error {
+  color: #dc2626; /* red-600 */
+}
