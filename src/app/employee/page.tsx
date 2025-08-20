@@ -97,7 +97,6 @@ export default function EmployeePage() {
 
   return (
     <main className={styles.container}>
-      {/* Título fixo no topo */}
       <h1 className={styles.title}>Lista de Funcionários</h1>
 
       <div className={styles.contentWrapper}>
