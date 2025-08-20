@@ -11,9 +11,11 @@ type PageProps = {
 
 export default function EmployeeDetailsPage({ params }: PageProps) {
   const id = Number(params.id)
+
   if (isNaN(id)) return notFound()
 
   const employee = getEmployeeById(id)
+  
   if (!employee) {
     return (
       <div className={styles.notFoundContainer}>
