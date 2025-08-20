@@ -1,17 +1,19 @@
+// src/app/employee/[id]/page.tsx
+
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getEmployeeById } from '../../lib/mock/employees'
 import styles from './EmployeeDetails.module.css'
 
-interface Props {
+interface PageProps {
   params: { id: string }
 }
 
-export default function EmployeeDetailsPage({ params }: Props) {
+export default async function EmployeeDetailsPage({ params }: PageProps) {
   const id = Number(params.id)
   if (isNaN(id)) return notFound()
 
-  const employee = getEmployeeById(id) // id como number
+  const employee = getEmployeeById(id) // busca síncrona mockada
   if (!employee) {
     return (
       <div className={styles.notFoundContainer}>
