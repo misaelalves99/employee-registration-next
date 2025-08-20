@@ -5,15 +5,15 @@ import Link from 'next/link'
 import { getEmployeeById } from '../../lib/mock/employees'
 import styles from './EmployeeDetails.module.css'
 
-interface PageProps {
+type PageProps = {
   params: { id: string }
 }
 
-export default async function EmployeeDetailsPage({ params }: PageProps) {
+export default function EmployeeDetailsPage({ params }: PageProps) {
   const id = Number(params.id)
   if (isNaN(id)) return notFound()
 
-  const employee = getEmployeeById(id) // busca síncrona mockada
+  const employee = getEmployeeById(id)
   if (!employee) {
     return (
       <div className={styles.notFoundContainer}>
