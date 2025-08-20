@@ -1,5 +1,7 @@
 // src/app/employee/[id]/page.tsx
 
+// src/app/employee/[id]/page.tsx
+
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getEmployeeById } from '../../lib/mock/employees'
@@ -70,7 +72,7 @@ export default function EmployeeDetailsPage({ params }: PageProps) {
         <Link href="/employee" className={styles.btnSecondary}>
           Voltar
         </Link>
-        <Link href={`/employee/${employee.id}/edit`} className={styles.btnPrimary}>
+        <Link href={`/employee/${employee.id}/edit` as string} className={styles.btnPrimary}>
           Editar
         </Link>
       </div>
