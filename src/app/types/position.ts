@@ -5,6 +5,7 @@ export const POSITIONS = [
   'Analista',
   'Gerente',
   'Estagiário',
+  'Designer', 
   'Outro',
 ] as const;
 

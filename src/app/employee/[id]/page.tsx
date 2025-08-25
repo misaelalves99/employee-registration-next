@@ -1,7 +1,5 @@
 // src/app/employee/[id]/page.tsx
 
-// src/app/employee/[id]/page.tsx
-
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getEmployeeById } from '../../lib/mock/employees'

@@ -12,7 +12,7 @@ export interface Employee {
   address?: string;
   position: Position;
   department?: Department;
-  departmentId?: number | null; // Changed to allow null
+  departmentId?: number | null;
   salary: number;
   admissionDate: string;
   isActive: boolean;
