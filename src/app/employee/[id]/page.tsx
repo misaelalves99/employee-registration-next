@@ -1,21 +1,23 @@
 // src/app/employee/[id]/page.tsx
 
-import { notFound } from 'next/navigation'
-import Link from 'next/link'
-import { getEmployeeById } from '../../lib/mock/employees'
-import styles from './EmployeeDetails.module.css'
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import { getEmployeeById } from '../../lib/mock/employees';
+import styles from './EmployeeDetails.module.css';
 
 type PageProps = {
-  params: { id: string }
-}
+  params: { id: string };
+};
 
 export default function EmployeeDetailsPage({ params }: PageProps) {
-  const id = Number(params.id)
+  const id = Number(params.id);
 
-  if (isNaN(id)) return notFound()
+  if (isNaN(id)) {
+    return notFound();
+  }
 
-  const employee = getEmployeeById(id)
-  
+  const employee = getEmployeeById(id);
+
   if (!employee) {
     return (
       <div className={styles.notFoundContainer}>
@@ -24,7 +26,7 @@ export default function EmployeeDetailsPage({ params }: PageProps) {
           Voltar para a lista
         </Link>
       </div>
-    )
+    );
   }
 
   return (
@@ -70,10 +72,13 @@ export default function EmployeeDetailsPage({ params }: PageProps) {
         <Link href="/employee" className={styles.btnSecondary}>
           Voltar
         </Link>
-        <Link href={`/employee/${employee.id}/edit` as string} className={styles.btnPrimary}>
+        <Link
+          href={{ pathname: `/employee/edit/${employee.id}` }}
+          className={styles.btnPrimary}
+        >
           Editar
         </Link>
       </div>
     </div>
-  )
+  );
 }

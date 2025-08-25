@@ -1,5 +1,7 @@
 // app/employee/page.tsx
 
+// app/employee/page.tsx
+
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -28,39 +30,41 @@ export default function EmployeePage() {
   const fetchEmployees = useCallback(() => {
     let filtered = [...mockEmployees];
 
-    if (query) {
-      const q = query.toLowerCase();
-      filtered = filtered.filter(emp =>
-        emp.name.toLowerCase().includes(q) ||
-        emp.email.toLowerCase().includes(q) ||
-        emp.cpf.includes(q) ||
-        emp.phone?.includes(q)
+    // 🔎 Filtro por texto de busca (query tem prioridade sobre filters.search)
+    const searchTerm = query || filters.search;
+    if (searchTerm) {
+      const q = searchTerm.toLowerCase();
+      filtered = filtered.filter(
+        (emp) =>
+          emp.name.toLowerCase().includes(q) ||
+          emp.email.toLowerCase().includes(q) ||
+          emp.cpf.includes(q) ||
+          emp.phone?.includes(q)
       );
     }
 
-    Object.entries(filters).forEach(([key, value]) => {
-      if (value !== undefined && value !== null && value !== '') {
-        if (key === 'isActive' && typeof value === 'boolean') {
-          filtered = filtered.filter(emp => emp.isActive === value);
-        } else if (key === 'departmentId' && typeof value === 'number') {
-          filtered = filtered.filter(emp => emp.department?.id === value);
-        } else if (key === 'position' && typeof value === 'string') {
-          filtered = filtered.filter(emp => emp.position === value);
-        } else if (key === 'admissionDateFrom' && typeof value === 'string') {
-          filtered = filtered.filter(emp => new Date(emp.admissionDate) >= new Date(value));
-        } else if (key === 'admissionDateTo' && typeof value === 'string') {
-          filtered = filtered.filter(emp => new Date(emp.admissionDate) <= new Date(value));
-        } else if (key === 'search' && typeof value === 'string') {
-          const q = value.toLowerCase();
-          filtered = filtered.filter(emp =>
-            emp.name.toLowerCase().includes(q) ||
-            emp.email.toLowerCase().includes(q) ||
-            emp.cpf.includes(q) ||
-            emp.phone?.includes(q)
-          );
-        }
+    // 📌 Outros filtros
+    if (filters.isActive !== undefined) {
+      filtered = filtered.filter((emp) => emp.isActive === filters.isActive);
+    }
+    if (filters.departmentId) {
+      filtered = filtered.filter((emp) => emp.department?.id === filters.departmentId);
+    }
+    if (filters.position) {
+      filtered = filtered.filter((emp) => emp.position === filters.position);
+    }
+    if (filters.admissionDateFrom) {
+      const from = new Date(filters.admissionDateFrom);
+      if (!isNaN(from.getTime())) {
+        filtered = filtered.filter((emp) => new Date(emp.admissionDate) >= from);
       }
-    });
+    }
+    if (filters.admissionDateTo) {
+      const to = new Date(filters.admissionDateTo);
+      if (!isNaN(to.getTime())) {
+        filtered = filtered.filter((emp) => new Date(emp.admissionDate) <= to);
+      }
+    }
 
     setEmployees(filtered);
   }, [query, filters]);
@@ -79,16 +83,14 @@ export default function EmployeePage() {
 
   const handleDeleteConfirmed = () => {
     if (!selectedEmployeeToDelete) return;
-    const index = mockEmployees.findIndex(e => e.id === selectedEmployeeToDelete.id);
-    if (index !== -1) {
-      mockEmployees.splice(index, 1);
-      fetchEmployees();
-    }
+    const updated = mockEmployees.filter((e) => e.id !== selectedEmployeeToDelete.id);
+    mockEmployees.splice(0, mockEmployees.length, ...updated);
+    fetchEmployees();
     closeDeleteModal();
   };
 
   const toggleActiveStatus = (emp: Employee) => {
-    const index = mockEmployees.findIndex(e => e.id === emp.id);
+    const index = mockEmployees.findIndex((e) => e.id === emp.id);
     if (index !== -1) {
       mockEmployees[index].isActive = !mockEmployees[index].isActive;
       fetchEmployees();
@@ -100,10 +102,12 @@ export default function EmployeePage() {
       <h1 className={styles.title}>Lista de Funcionários</h1>
 
       <div className={styles.contentWrapper}>
+        {/* Sidebar com filtros */}
         <aside className={styles.sidebar}>
           <EmployeeFilter onFilterChange={setFilters} />
         </aside>
 
+        {/* Seção principal */}
         <section className={styles.rightSection}>
           <div className={styles.topBar}>
             <Link href="/employee/create" className={styles.btnPrimary}>
@@ -112,9 +116,10 @@ export default function EmployeePage() {
             <input
               type="text"
               value={query}
-              onChange={e => setQuery(e.target.value)}
+              onChange={(e) => setQuery(e.target.value)}
               placeholder="Buscar por nome, CPF, e-mail ou telefone..."
               className={styles.searchInput}
+              aria-label="Campo de busca de funcionários"
             />
           </div>
 
@@ -134,7 +139,7 @@ export default function EmployeePage() {
                 </tr>
               </thead>
               <tbody>
-                {employees.map(emp => (
+                {employees.map((emp) => (
                   <tr key={emp.id} className={styles.trHover}>
                     <td className={styles.td}>{emp.name}</td>
                     <td className={styles.td}>{emp.cpf}</td>
@@ -145,21 +150,31 @@ export default function EmployeePage() {
                     </td>
                     <td className={styles.td}>{emp.isActive ? 'Ativo' : 'Inativo'}</td>
                     <td className={`${styles.td} ${styles.actions}`}>
-                      <Link href={`/employee/${emp.id}`} className={`${styles.btn} ${styles.btnInfo}`}>
+                      <Link
+                        href={`/employee/${emp.id}`}
+                        className={`${styles.btn} ${styles.btnInfo}`}
+                      >
                         Detalhes
                       </Link>
-                      <Link href={`/employee/edit/${emp.id}`} className={`${styles.btn} ${styles.btnWarning}`}>
+                      <Link
+                        href={`/employee/edit/${emp.id}`}
+                        className={`${styles.btn} ${styles.btnWarning}`}
+                      >
                         Editar
                       </Link>
                       <button
                         onClick={() => toggleActiveStatus(emp)}
-                        className={`${styles.btn} ${emp.isActive ? styles.btnSecondary : styles.btnSuccess}`}
+                        className={`${styles.btn} ${
+                          emp.isActive ? styles.btnSecondary : styles.btnSuccess
+                        }`}
+                        aria-label={emp.isActive ? 'Inativar funcionário' : 'Ativar funcionário'}
                       >
                         {emp.isActive ? 'Inativar' : 'Ativar'}
                       </button>
                       <button
                         onClick={() => openDeleteModal(emp)}
                         className={`${styles.btn} ${styles.btnDanger}`}
+                        aria-label="Excluir funcionário"
                       >
                         Deletar
                       </button>
@@ -172,6 +187,7 @@ export default function EmployeePage() {
         </section>
       </div>
 
+      {/* Modal de exclusão */}
       {selectedEmployeeToDelete && (
         <EmployeeDeleteModal
           employee={selectedEmployeeToDelete}

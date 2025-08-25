@@ -20,10 +20,14 @@ export default function CreateEmployeePage() {
   const [formData, setFormData] = useState({
     name: '',
     cpf: '',
+    email: '',
+    phone: '',
+    address: '',
     salary: '',
-    isActive: true,
+    admissionDate: '',
     departmentId: '',
     position: '' as Position,
+    isActive: true,
   })
 
   useEffect(() => {
@@ -51,12 +55,14 @@ export default function CreateEmployeePage() {
       id: Date.now(),
       name: formData.name,
       cpf: formData.cpf,
+      email: formData.email,
+      phone: formData.phone,
+      address: formData.address,
       salary: parseFloat(formData.salary),
+      admissionDate: formData.admissionDate || new Date().toISOString(),
       position: formData.position,
-      departmentId: parseInt(formData.departmentId),
+      departmentId: formData.departmentId ? parseInt(formData.departmentId) : null,
       department: departments.find(d => d.id === parseInt(formData.departmentId)),
-      email: '',
-      admissionDate: new Date().toISOString(),
       isActive: formData.isActive,
     })
     router.push('/employee')
@@ -68,30 +74,27 @@ export default function CreateEmployeePage() {
     <div className={styles.container}>
       <h1 className={styles.title}>Criar Funcionário</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
-        <div className={styles.field}>
-          <label htmlFor="name" className={styles.label}>Nome:</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            required
-            className={styles.input}
-          />
-        </div>
-        <div className={styles.field}>
-          <label htmlFor="cpf" className={styles.label}>CPF:</label>
-          <input
-            type="text"
-            id="cpf"
-            name="cpf"
-            value={formData.cpf}
-            onChange={handleChange}
-            required
-            className={styles.input}
-          />
-        </div>
+        {[
+          ['name', 'Nome'],
+          ['cpf', 'CPF'],
+          ['email', 'Email'],
+          ['phone', 'Telefone'],
+          ['address', 'Endereço'],
+        ].map(([key, label]) => (
+          <div className={styles.field} key={key}>
+            <label htmlFor={key} className={styles.label}>{label}:</label>
+            <input
+              type="text"
+              id={key}
+              name={key}
+              value={formData[key as keyof typeof formData] as string}
+              onChange={handleChange}
+              required={key !== 'phone' && key !== 'address'}
+              className={styles.input}
+            />
+          </div>
+        ))}
+
         <div className={styles.field}>
           <label htmlFor="salary" className={styles.label}>Salário:</label>
           <input
@@ -105,6 +108,20 @@ export default function CreateEmployeePage() {
             className={styles.input}
           />
         </div>
+
+        <div className={styles.field}>
+          <label htmlFor="admissionDate" className={styles.label}>Data de Admissão:</label>
+          <input
+            type="date"
+            id="admissionDate"
+            name="admissionDate"
+            value={formData.admissionDate}
+            onChange={handleChange}
+            required
+            className={styles.input}
+          />
+        </div>
+
         <div className={styles.field}>
           <label htmlFor="departmentId" className={styles.label}>Departamento:</label>
           <select
@@ -112,15 +129,15 @@ export default function CreateEmployeePage() {
             name="departmentId"
             value={formData.departmentId}
             onChange={handleChange}
-            required
             className={styles.select}
           >
-            <option value="">Selecione...</option>
+            <option value="">Nenhum</option>
             {departments.map(d => (
               <option key={d.id} value={d.id}>{d.name}</option>
             ))}
           </select>
         </div>
+
         <div className={styles.field}>
           <label htmlFor="position" className={styles.label}>Cargo:</label>
           <select
@@ -137,6 +154,7 @@ export default function CreateEmployeePage() {
             ))}
           </select>
         </div>
+
         <div className={styles.checkboxContainer}>
           <input
             type="checkbox"
@@ -148,6 +166,7 @@ export default function CreateEmployeePage() {
           />
           <label htmlFor="isActive">Ativo</label>
         </div>
+
         <button
           type="submit"
           className={styles.button}
