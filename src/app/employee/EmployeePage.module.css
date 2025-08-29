@@ -1,169 +1,216 @@
-/* Container geral centralizado */
+/* app/employee/EmployeePage.module.css */
+
+/* Container principal */
 .container {
-  max-width: 90rem; /* max-w-7xl */
-  font-family: 'Inter', sans-serif;
-  color: #374151; /* gray-700 */
+  max-width: 1700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #2c3e50;
 }
 
-/* Título fixo no topo */
+/* Título */
 .title {
-  font-size: 1.875rem; /* text-3xl */
+  font-size: 2rem;
   font-weight: 700;
-  user-select: none;
-  margin-bottom: 1rem;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+  text-align: start;
 }
 
-/* Wrapper que envolve filtro e conteúdo direito */
+/* Wrapper conteúdo */
 .contentWrapper {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
-/* Sidebar filtro */
+/* Sidebar de filtros */
 .sidebar {
-  width: 16rem; /* w-64 */
+  flex: 0 0 250px;
   padding: 1rem;
-  background-color: #f3f4f6; /* gray-100 */
-  border: 1px solid #d1d5db; /* gray-300 */
-  border-radius: 0.5rem;
-  user-select: none;
+  background-color: #f3f4f6;
+  border-radius: 12px;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.03);
+  height: fit-content;
 }
 
-/* Seção direita que engloba topo (botão + busca) e tabela */
+/* Seção direita (tabela e top bar) */
 .rightSection {
-  flex-grow: 1;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 1rem;
 }
 
-/* Linha com botão e barra de busca ao lado, acima da tabela */
+/* Barra superior: botão + pesquisa */
 .topBar {
   display: flex;
-  justify-content: space-between; /* botão à esquerda, input à direita */
-  align-items: center;
-  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem;
   margin-bottom: 1rem;
 }
 
-/* Botão Novo Funcionário */
 .btnPrimary {
-  background-color: #2563eb; /* blue-600 */
-  color: white;
+  background-color: #2563eb;
+  color: #fff;
   padding: 0.5rem 1rem;
-  border-radius: 0.375rem;
+  border-radius: 8px;
   font-weight: 600;
   text-decoration: none;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  border: none;
-  flex-shrink: 0; /* botão não encolhe */
+  transition: background 0.2s ease;
 }
 
 .btnPrimary:hover {
-  background-color: #1d4ed8; /* blue-700 */
+  background-color: #1d4ed8;
 }
 
 .searchInput {
-  width: 20rem; /* largura fixa padrão */
+  flex: 1;
+  max-width: 300px;
   padding: 0.5rem 0.75rem;
-  border: 1px solid #9ca3af; /* gray-400 */
-  border-radius: 0.375rem;
-  font-size: 1rem;
-  outline-offset: 2px;
-  transition: border-color 0.2s ease;
-  user-select: text;
-  min-width: 0;
-  flex-grow: 0;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .searchInput:focus {
-  border-color: #2563eb; /* blue-600 */
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.4);
-}
-
-/* Texto sem resultado */
-.noResults {
-  color: #6b7280; /* gray-500 */
-  user-select: none;
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 /* Tabela */
 .table {
   width: 100%;
   border-collapse: collapse;
-  border: 1px solid #d1d5db; /* gray-300 */
-  user-select: none;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.03);
 }
 
-.thead {
-  background-color: #1f2937; /* gray-800 */
-  color: white;
-}
-
-.th, .td {
-  border: 1px solid #d1d5db;
-  padding: 0.5rem 0.75rem;
+.thead th {
+  background-color: #f3f4f6;
+  padding: 0.75rem 1rem;
   text-align: left;
-  vertical-align: middle;
-  font-size: 0.875rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.td, .th {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .trHover:hover {
-  background-color: #f9fafb; /* gray-50 */
+  background-color: #f9fafb;
+  transition: background 0.2s ease;
 }
 
-/* Ações - botões */
-.actions {
-  display: flex;
-  gap: 0.25rem;
-}
-
+/* Botões dentro da tabela */
 .btn {
-  padding: 0.25rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 600;
-  border-radius: 0.375rem;
-  border: none;
+  display: inline-block;
+  padding: 0.35rem 0.75rem;
+  margin: 0.15rem 0.1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  color: white;
-  user-select: none;
+  border: none;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-/* Botões coloridos */
 .btnInfo {
-  background-color: #3b82f6; /* blue-400 */
+  background-color: #3b82f6;
+  color: #fff;
 }
+
 .btnInfo:hover {
-  background-color: #2563eb; /* blue-600 */
+  background-color: #2563eb;
 }
 
 .btnWarning {
-  background-color: #fbbf24; /* yellow-400 */
-  color: #1f2937;
-}
-.btnWarning:hover {
-  background-color: #f59e0b; /* yellow-500 */
-  color: white;
+  background-color: #f59e0b;
+  color: #fff;
 }
 
-.btnSecondary {
-  background-color: #6b7280; /* gray-500 */
-}
-.btnSecondary:hover {
-  background-color: #4b5563; /* gray-600 */
+.btnWarning:hover {
+  background-color: #d97706;
 }
 
 .btnSuccess {
-  background-color: #22c55e; /* green-500 */
+  background-color: #10b981;
+  color: #fff;
 }
+
 .btnSuccess:hover {
-  background-color: #16a34a; /* green-600 */
+  background-color: #059669;
+}
+
+.btnSecondary {
+  background-color: #6b7280;
+  color: #fff;
+}
+
+.btnSecondary:hover {
+  background-color: #4b5563;
 }
 
 .btnDanger {
-  background-color: #ef4444; /* red-500 */
+  background-color: #ef4444;
+  color: #fff;
 }
+
 .btnDanger:hover {
-  background-color: #dc2626; /* red-600 */
+  background-color: #dc2626;
+}
+
+/* Coluna de ações */
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+/* Mensagem sem resultados */
+.noResults {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  padding: 1rem;
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+  .contentWrapper {
+    flex-direction: column;
+  }
+  .sidebar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .topBar {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .searchInput {
+    width: 100%;
+  }
+
+  .btn, .btnPrimary {
+    width: 100%;
+  }
+
+  .actions {
+    flex-direction: column;
+  }
 }

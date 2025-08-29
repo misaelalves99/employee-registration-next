@@ -1,28 +1,61 @@
+/* app/HomePage.module.css */
+
 .main {
   display: flex;
-  min-height: 100vh;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  padding: 2rem;
+  background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
   text-align: center;
-  padding: 1rem;
-  font-family: 'Inter', sans-serif;
-  background-color: #f9fafb; /* cinza muito claro */
-  color: #374151; /* gray-700 */
-  user-select: none;
+  font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
 }
 
 .title {
-  font-size: 2.5rem; /* text-4xl */
+  font-size: 2.5rem;
   font-weight: 700;
+  color: #1f2937;
   margin-bottom: 1rem;
-  color: #111827; /* gray-900 */
 }
 
 .description {
-  font-size: 1.125rem; /* text-lg */
-  max-width: 42rem; /* max-w-xl */
+  font-size: 1.1rem;
+  color: #4b5563;
+  max-width: 600px;
   line-height: 1.6;
-  color: #4b5563; /* gray-600 */
-  user-select: text;
+  margin-bottom: 2rem;
+}
+
+.btnPrimary {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #3b82f6;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btnPrimary:hover {
+  background-color: #2563eb;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+    padding: 0 1rem;
+  }
+
+  .btnPrimary {
+    width: 100%;
+    text-align: center;
+  }
 }

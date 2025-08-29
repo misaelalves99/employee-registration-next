@@ -1,97 +1,129 @@
+/* src/employee/[id]/DetailsEmployeePage.module.css */
+
+/* Container principal */
 .container {
-  max-width: 42rem; /* max-w-2xl */
-  margin-left: auto;
-  margin-right: auto;
-  padding: 1.5rem;
-  font-family: 'Inter', sans-serif;
-  color: #111827; /* gray-900 */
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #2c3e50;
 }
 
+/* Título */
 .title {
-  font-size: 1.875rem; /* text-3xl */
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: 1.5rem;
-  user-select: none;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #1f2937;
 }
 
+/* Card de detalhes */
 .card {
-  background-color: #fff;
-  box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
-  border: 1px solid #e5e7eb; /* gray-200 */
-  border-radius: 0.75rem; /* rounded */
-  padding: 1.5rem;
+  background-color: #f9fafb;
+  border-radius: 12px;
+  padding: 1.75rem 1.5rem;
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.03);
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  color: #374151; /* gray-700 */
-  font-weight: 500;
-  user-select: text;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
+/* Labels fortes */
 .label {
   font-weight: 600;
-  color: #111827; /* gray-900 */
+  color: #374151;
 }
 
+/* Grupo de botões */
 .buttonGroup {
-  margin-top: 1.5rem;
   display: flex;
-  gap: 1rem;
-  justify-content: flex-start;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
-.btnPrimary {
-  background-color: #2563eb; /* blue-600 */
-  color: white;
-  padding: 0.5rem 1.5rem;
-  border-radius: 0.5rem;
+.btnPrimary,
+.btnSecondary {
+  padding: 0.65rem 1.5rem;
+  border-radius: 10px;
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
+  transition: background 0.2s ease-in-out, transform 0.1s ease;
+  border: none;
   text-align: center;
-  user-select: none;
-  transition: background-color 0.2s ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+}
+
+/* Botão azul */
+.btnPrimary {
+  background-color: #2563eb;
+  color: #ffffff;
 }
 
 .btnPrimary:hover {
-  background-color: #1d4ed8; /* blue-700 */
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
 }
 
+/* Botão cinza */
 .btnSecondary {
-  background-color: #9ca3af; /* gray-400 */
-  color: white;
-  padding: 0.5rem 1.5rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: center;
-  user-select: none;
-  transition: background-color 0.2s ease;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+  background-color: #e5e7eb;
+  color: #1f2937;
 }
 
 .btnSecondary:hover {
-  background-color: #6b7280; /* gray-500 */
+  background-color: #d1d5db;
+  transform: translateY(-1px);
 }
 
-.notFoundContainer {
-  max-width: 20rem; /* max-w-xl */
-  margin-left: auto;
-  margin-right: auto;
-  padding: 1.5rem;
+/* Loading */
+.loading {
   text-align: center;
-  color: #dc2626; /* red-600 */
+  font-size: 1rem;
+  color: #6b7280;
+}
+
+/* Not Found */
+.notFoundContainer {
+  text-align: center;
+  padding: 2rem;
+  background-color: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 12px;
+  max-width: 500px;
+  margin: 3rem auto;
 }
 
 .notFoundTitle {
+  font-size: 1.75rem;
   font-weight: 700;
-  font-size: 1.5rem; /* text-2xl */
-  margin-bottom: 1rem;
-  user-select: none;
+  margin-bottom: 1.5rem;
+  color: #b91c1c;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container {
+    margin: 1rem;
+    padding: 1rem;
+  }
+
+  .card {
+    padding: 1rem;
+    gap: 0.5rem;
+  }
+
+  .buttonGroup {
+    flex-direction: column;
+  }
+
+  .btnPrimary,
+  .btnSecondary {
+    width: 100%;
+  }
 }

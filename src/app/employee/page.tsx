@@ -1,7 +1,5 @@
 // app/employee/page.tsx
 
-// app/employee/page.tsx
-
 'use client';
 
 import { useState, useEffect, useCallback } from 'react';
@@ -17,8 +15,6 @@ interface EmployeeFilters {
   departmentId?: number;
   position?: string;
   isActive?: boolean;
-  admissionDateFrom?: string;
-  admissionDateTo?: string;
 }
 
 export default function EmployeePage() {
@@ -30,41 +26,27 @@ export default function EmployeePage() {
   const fetchEmployees = useCallback(() => {
     let filtered = [...mockEmployees];
 
-    // 🔎 Filtro por texto de busca (query tem prioridade sobre filters.search)
-    const searchTerm = query || filters.search;
-    if (searchTerm) {
-      const q = searchTerm.toLowerCase();
+    if (query) {
+      const q = query.toLowerCase();
       filtered = filtered.filter(
         (emp) =>
           emp.name.toLowerCase().includes(q) ||
           emp.email.toLowerCase().includes(q) ||
-          emp.cpf.includes(q) ||
           emp.phone?.includes(q)
       );
     }
 
-    // 📌 Outros filtros
-    if (filters.isActive !== undefined) {
-      filtered = filtered.filter((emp) => emp.isActive === filters.isActive);
-    }
-    if (filters.departmentId) {
-      filtered = filtered.filter((emp) => emp.department?.id === filters.departmentId);
-    }
-    if (filters.position) {
-      filtered = filtered.filter((emp) => emp.position === filters.position);
-    }
-    if (filters.admissionDateFrom) {
-      const from = new Date(filters.admissionDateFrom);
-      if (!isNaN(from.getTime())) {
-        filtered = filtered.filter((emp) => new Date(emp.admissionDate) >= from);
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        if (key === 'isActive' && typeof value === 'boolean') {
+          filtered = filtered.filter((emp) => emp.isActive === value);
+        } else if (key === 'departmentId' && typeof value === 'number') {
+          filtered = filtered.filter((emp) => emp.department?.id === value);
+        } else if (key === 'position' && typeof value === 'string') {
+          filtered = filtered.filter((emp) => emp.position === value);
+        }
       }
-    }
-    if (filters.admissionDateTo) {
-      const to = new Date(filters.admissionDateTo);
-      if (!isNaN(to.getTime())) {
-        filtered = filtered.filter((emp) => new Date(emp.admissionDate) <= to);
-      }
-    }
+    });
 
     setEmployees(filtered);
   }, [query, filters]);
@@ -73,26 +55,29 @@ export default function EmployeePage() {
     fetchEmployees();
   }, [fetchEmployees]);
 
-  const openDeleteModal = (employee: Employee) => {
-    setSelectedEmployeeToDelete(employee);
-  };
-
-  const closeDeleteModal = () => {
-    setSelectedEmployeeToDelete(null);
-  };
+  const openDeleteModal = (employee: Employee) => setSelectedEmployeeToDelete(employee);
+  const closeDeleteModal = () => setSelectedEmployeeToDelete(null);
 
   const handleDeleteConfirmed = () => {
     if (!selectedEmployeeToDelete) return;
-    const updated = mockEmployees.filter((e) => e.id !== selectedEmployeeToDelete.id);
-    mockEmployees.splice(0, mockEmployees.length, ...updated);
-    fetchEmployees();
+    const index = mockEmployees.findIndex((e) => e.id === selectedEmployeeToDelete.id);
+    if (index !== -1) {
+      mockEmployees.splice(index, 1);
+      fetchEmployees();
+    }
     closeDeleteModal();
   };
 
   const toggleActiveStatus = (emp: Employee) => {
+    const action = emp.isActive ? 'inativar' : 'ativar';
+    const confirmAction = window.confirm(
+      `Tem certeza que deseja ${action} o funcionário ${emp.name}?`
+    );
+    if (!confirmAction) return;
+
     const index = mockEmployees.findIndex((e) => e.id === emp.id);
     if (index !== -1) {
-      mockEmployees[index].isActive = !mockEmployees[index].isActive;
+      mockEmployees[index].isActive = !emp.isActive;
       fetchEmployees();
     }
   };
@@ -117,7 +102,7 @@ export default function EmployeePage() {
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar por nome, CPF, e-mail ou telefone..."
+              placeholder="Buscar por nome, e-mail ou telefone..."
               className={styles.searchInput}
               aria-label="Campo de busca de funcionários"
             />
@@ -130,10 +115,8 @@ export default function EmployeePage() {
               <thead className={styles.thead}>
                 <tr>
                   <th className={styles.th}>Nome</th>
-                  <th className={styles.th}>CPF</th>
                   <th className={styles.th}>Cargo</th>
                   <th className={styles.th}>Departamento</th>
-                  <th className={styles.th}>Admissão</th>
                   <th className={styles.th}>Status</th>
                   <th className={styles.th}>Ações</th>
                 </tr>
@@ -142,12 +125,8 @@ export default function EmployeePage() {
                 {employees.map((emp) => (
                   <tr key={emp.id} className={styles.trHover}>
                     <td className={styles.td}>{emp.name}</td>
-                    <td className={styles.td}>{emp.cpf}</td>
                     <td className={styles.td}>{emp.position}</td>
                     <td className={styles.td}>{emp.department?.name || '-'}</td>
-                    <td className={styles.td}>
-                      {new Date(emp.admissionDate).toLocaleDateString('pt-BR')}
-                    </td>
                     <td className={styles.td}>{emp.isActive ? 'Ativo' : 'Inativo'}</td>
                     <td className={`${styles.td} ${styles.actions}`}>
                       <Link
@@ -187,7 +166,6 @@ export default function EmployeePage() {
         </section>
       </div>
 
-      {/* Modal de exclusão */}
       {selectedEmployeeToDelete && (
         <EmployeeDeleteModal
           employee={selectedEmployeeToDelete}

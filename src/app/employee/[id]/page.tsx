@@ -3,7 +3,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getEmployeeById } from '../../lib/mock/employees';
-import styles from './EmployeeDetails.module.css';
+import styles from '../../employee/[id]/EmployeeDetails.module.css';
 
 type PageProps = {
   params: { id: string };
@@ -73,7 +73,7 @@ export default function EmployeeDetailsPage({ params }: PageProps) {
           Voltar
         </Link>
         <Link
-          href={{ pathname: `/employee/edit/${employee.id}` }}
+          href={`/employee/edit/${employee.id}`}
           className={styles.btnPrimary}
         >
           Editar

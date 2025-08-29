@@ -131,7 +131,7 @@ export default function CreateEmployeePage() {
             onChange={handleChange}
             className={styles.select}
           >
-            <option value="">Nenhum</option>
+            <option value="">Selecione...</option>
             {departments.map(d => (
               <option key={d.id} value={d.id}>{d.name}</option>
             ))}
@@ -164,7 +164,7 @@ export default function CreateEmployeePage() {
             onChange={handleChange}
             className={styles.checkboxInput}
           />
-          <label htmlFor="isActive">Ativo</label>
+          <label htmlFor="isActive" className={styles.label}>Ativo</label>
         </div>
 
         <button
@@ -172,6 +172,13 @@ export default function CreateEmployeePage() {
           className={styles.button}
         >
           Criar Funcionário
+        </button>
+        <button
+          type="button"
+          onClick={() => router.push('/employee')}
+          className={`${styles.button} ${styles.backButton}`}
+        >
+          Voltar
         </button>
       </form>
     </div>

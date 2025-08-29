@@ -5,8 +5,8 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { EmployeeForm } from '../../../types/employeeForm';
-import { Department } from '../../../types/department';
+import type { EmployeeForm } from '../../../types/employeeForm';
+import type { Department } from '../../../types/department';
 import { POSITIONS } from '../../../types/position';
 import { getEmployeeById, updateMockEmployee } from '../../../lib/mock/employees';
 import { getMockDepartments } from '../../../lib/mock/departments';
@@ -43,7 +43,7 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
       position: data.position,
       departmentId: data.department?.id ?? null,
       salary: data.salary,
-      admissionDate: data.admissionDate.slice(0, 10),
+      admissionDate: data.admissionDate.slice(0, 10), // garante formato yyyy-mm-dd
       isActive: data.isActive,
     });
 
@@ -64,8 +64,8 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
     }
   }
 
-  if (loading) return <p>Carregando...</p>;
-  if (!employee) return <p>Funcionário não encontrado</p>;
+  if (loading) return <p className={styles.loading}>Carregando...</p>;
+  if (!employee) return <p className={styles.loading}>Funcionário não encontrado</p>;
 
   return (
     <div className={styles.container}>
@@ -80,21 +80,31 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
       )}
 
       <form onSubmit={handleSubmit} className={styles.form}>
-        {[['name', 'Nome'], ['cpf', 'CPF'], ['email', 'Email'], ['phone', 'Telefone'], ['address', 'Endereço']].map(
-          ([key, label]) => (
-            <div className={styles.field} key={key}>
-              <label className={styles.label}>{label}</label>
-              <input
-                type="text"
-                className={styles.input}
-                value={employee[key as keyof EmployeeForm] as string}
-                onChange={(e) => setEmployee({ ...employee, [key]: e.target.value })}
-                required={key !== 'phone' && key !== 'address'}
-              />
-            </div>
-          )
-        )}
+        {/* Campos de texto padrão */}
+        {(['name', 'cpf', 'email', 'phone', 'address'] as const).map((key) => (
+          <div className={styles.field} key={key}>
+            <label className={styles.label}>
+              {key === 'name'
+                ? 'Nome'
+                : key === 'cpf'
+                ? 'CPF'
+                : key === 'email'
+                ? 'Email'
+                : key === 'phone'
+                ? 'Telefone'
+                : 'Endereço'}
+            </label>
+            <input
+              type="text"
+              className={styles.input}
+              value={employee[key] ?? ''}
+              onChange={(e) => setEmployee({ ...employee, [key]: e.target.value })}
+              required={key !== 'phone' && key !== 'address'}
+            />
+          </div>
+        ))}
 
+        {/* Cargo */}
         <div className={styles.field}>
           <label className={styles.label}>Cargo</label>
           <select
@@ -113,6 +123,7 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
           </select>
         </div>
 
+        {/* Departamento */}
         <div className={styles.field}>
           <label className={styles.label}>Departamento</label>
           <select
@@ -134,6 +145,7 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
           </select>
         </div>
 
+        {/* Salário */}
         <div className={styles.field}>
           <label className={styles.label}>Salário</label>
           <input
@@ -141,11 +153,14 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
             step="0.01"
             className={styles.input}
             value={employee.salary}
-            onChange={(e) => setEmployee({ ...employee, salary: parseFloat(e.target.value) })}
+            onChange={(e) =>
+              setEmployee({ ...employee, salary: parseFloat(e.target.value) || 0 })
+            }
             required
           />
         </div>
 
+        {/* Data de Admissão */}
         <div className={styles.field}>
           <label className={styles.label}>Data de Admissão</label>
           <input
@@ -157,8 +172,9 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
           />
         </div>
 
+        {/* Checkbox Ativo */}
         <div className={styles.checkboxContainer}>
-          <label className="inline-flex items-center gap-2">
+          <label className={styles.checkboxLabel}>
             <input
               type="checkbox"
               checked={employee.isActive}
@@ -168,6 +184,7 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
           </label>
         </div>
 
+        {/* Botões */}
         <div className={styles.buttons}>
           <button type="submit" className={`${styles.btn} ${styles.btnPrimary}`}>
             Salvar

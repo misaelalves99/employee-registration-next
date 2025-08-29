@@ -1,0 +1,39 @@
+/* src/privacy/PrivacyPage.module.css */
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  min-height: 80vh;
+  padding: 3rem 2rem;
+  background-color: #f9fafb; /* fundo claro e neutro */
+  font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #111827; /* cinza escuro elegante */
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.text {
+  font-size: 1rem;
+  color: #4b5563; /* cinza médio para leitura confortável */
+  max-width: 700px;
+  line-height: 1.8;
+  text-align: justify;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .text {
+    font-size: 0.95rem;
+    padding: 0 1rem;
+  }
+}
