@@ -14,18 +14,24 @@ describe("EmployeeCreateForm", () => {
   const setup = (onCreate = jest.fn()) =>
     render(<EmployeeCreateForm departments={mockDepartments} onCreate={onCreate} />);
 
-  it("renderiza o formulário corretamente", () => {
+  it("renderiza todos os campos do formulário corretamente", () => {
     setup();
-    expect(screen.getByRole("heading", { name: /Cadastrar Funcionário/i })).toBeInTheDocument();
+
+    expect(screen.getByRole("heading", { name: /cadastrar funcionário/i })).toBeInTheDocument();
     expect(screen.getByLabelText(/Nome/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/CPF/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Email/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Telefone/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Endereço/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Cargo/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Departamento/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Salário/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/Data de Admissão/i)).toBeInTheDocument();
   });
 
-  it("mostra erros de validação ao tentar salvar com campos obrigatórios vazios", async () => {
+  it("mostra erros de validação quando campos obrigatórios estão vazios", async () => {
     setup();
+
     fireEvent.click(screen.getByRole("button", { name: /Salvar/i }));
 
     expect(await screen.findByText(/Nome é obrigatório/i)).toBeInTheDocument();
@@ -37,7 +43,7 @@ describe("EmployeeCreateForm", () => {
     expect(await screen.findByText(/Data de admissão é obrigatória/i)).toBeInTheDocument();
   });
 
-  it("chama onCreate com os dados corretos quando o formulário é válido", async () => {
+  it("chama onCreate com FormData correto quando formulário é válido", async () => {
     const onCreateMock = jest.fn().mockResolvedValue(undefined);
     setup(onCreateMock);
 
@@ -53,15 +59,15 @@ describe("EmployeeCreateForm", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /Salvar/i }));
 
-    await waitFor(() => {
-      expect(onCreateMock).toHaveBeenCalledTimes(1);
-    });
+    await waitFor(() => expect(onCreateMock).toHaveBeenCalledTimes(1));
 
-    // Verifica se foi passado um FormData válido
     const formDataArg = onCreateMock.mock.calls[0][0] as FormData;
+
     expect(formDataArg.get("name")).toBe("João Silva");
     expect(formDataArg.get("cpf")).toBe("12345678900");
     expect(formDataArg.get("email")).toBe("joao@email.com");
+    expect(formDataArg.get("phone")).toBe("11999999999");
+    expect(formDataArg.get("address")).toBe("Rua A");
     expect(formDataArg.get("position")).toBe(POSITIONS[0]);
     expect(formDataArg.get("departmentId")).toBe("1");
     expect(formDataArg.get("salary")).toBe("3500");

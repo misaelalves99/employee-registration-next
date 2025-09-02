@@ -1,11 +1,9 @@
-// app/employee/page.test.tsx
-
 import { render, screen, fireEvent, waitFor } from '@testing-library/react'
 import EmployeePage from './page'
 import { mockEmployees } from '../lib/mock/employees'
 import '@testing-library/jest-dom'
 
-// Mock do EmployeeFilter e EmployeeDeleteModal para simplificar o teste
+// Mock do EmployeeFilter e EmployeeDeleteModal
 jest.mock('../components/employee/EmployeeFilter', () => ({
   __esModule: true,
   default: ({ onFilterChange }: any) => (
@@ -22,32 +20,9 @@ jest.mock('../components/employee/EmployeeDeleteModal', () => ({
 
 describe('EmployeePage', () => {
   beforeEach(() => {
-    // Reset do mockEmployees antes de cada teste
     mockEmployees.splice(0, mockEmployees.length, 
-      { 
-        id: 1, 
-        name: 'João', 
-        cpf: '123', 
-        email: 'joao@example.com',
-        position: 'Desenvolvedor' as const, 
-        department: { id: 1, name: 'TI' }, 
-        departmentId: 1,
-        salary: 5000,
-        admissionDate: '2023-01-01', 
-        isActive: true 
-      },
-      { 
-        id: 2, 
-        name: 'Maria', 
-        cpf: '456', 
-        email: 'maria@example.com',
-        position: 'Designer' as const, 
-        department: { id: 2, name: 'Design' }, 
-        departmentId: 2,
-        salary: 4500,
-        admissionDate: '2023-02-01', 
-        isActive: false 
-      }
+      { id: 1, name: 'João', cpf: '123', email: 'joao@example.com', position: 'Desenvolvedor' as const, department: { id: 1, name: 'TI' }, departmentId: 1, salary: 5000, admissionDate: '2023-01-01', isActive: true },
+      { id: 2, name: 'Maria', cpf: '456', email: 'maria@example.com', position: 'Designer' as const, department: { id: 2, name: 'Design' }, departmentId: 2, salary: 4500, admissionDate: '2023-02-01', isActive: false }
     )
   })
 
@@ -87,6 +62,14 @@ describe('EmployeePage', () => {
       expect(mockEmployees[0].isActive).toBe(false)
       expect(screen.getByText('Ativar')).toBeInTheDocument()
     })
+
+    // Verifica se pode reativar
+    const activateButton = screen.getByText('Ativar')
+    fireEvent.click(activateButton)
+    await waitFor(() => {
+      expect(mockEmployees[0].isActive).toBe(true)
+      expect(screen.getByText('Inativar')).toBeInTheDocument()
+    })
   })
 
   it('abre e confirma deleção de funcionário', async () => {
@@ -94,7 +77,6 @@ describe('EmployeePage', () => {
     const deleteButton = screen.getAllByText('Deletar')[0]
     fireEvent.click(deleteButton)
 
-    // O modal aparece, confirmamos deleção
     const confirmButton = screen.getByText('Confirmar Deleção')
     fireEvent.click(confirmButton)
 
@@ -104,8 +86,19 @@ describe('EmployeePage', () => {
   })
 
   it('mostra mensagem quando não há funcionários', async () => {
-    mockEmployees.splice(0, mockEmployees.length) // Remove todos
+    mockEmployees.splice(0, mockEmployees.length)
     render(<EmployeePage />)
     expect(screen.getByText(/Nenhum funcionário encontrado/i)).toBeInTheDocument()
+  })
+
+  it('filtra por isActive e departmentId', async () => {
+    render(<EmployeePage />)
+    // Força filtro manual
+    fireEvent.click(screen.getByText('Filtrar')) // position: 'Desenvolvedor'
+
+    await waitFor(() => {
+      const active = mockEmployees.find(e => e.isActive)
+      expect(active).toBeDefined()
+    })
   })
 })

@@ -28,8 +28,8 @@ describe('EmployeeDeletePage', () => {
     salary: 5000,
     admissionDate: new Date().toISOString(),
     isActive: true,
-    phone: '',
-    address: '',
+    phone: '11999999999',
+    address: 'Rua A, 123',
   }
 
   beforeEach(() => {
@@ -54,6 +54,9 @@ describe('EmployeeDeletePage', () => {
       expect(screen.getByText(mockEmployee.email)).toBeInTheDocument()
       expect(screen.getByText(mockEmployee.position)).toBeInTheDocument()
       expect(screen.getByText(mockEmployee.department.name)).toBeInTheDocument()
+      expect(screen.getByText(mockEmployee.phone)).toBeInTheDocument()
+      expect(screen.getByText(mockEmployee.address)).toBeInTheDocument()
+      expect(screen.getByText(`R$ ${mockEmployee.salary.toLocaleString('pt-BR')}`)).toBeInTheDocument()
     })
   })
 
@@ -70,7 +73,6 @@ describe('EmployeeDeletePage', () => {
     (getMockEmployees as jest.Mock).mockReturnValue([mockEmployee])
     (deleteMockEmployee as jest.Mock).mockImplementation(() => {})
 
-    // Mock do confirm para retornar true
     window.confirm = jest.fn(() => true)
 
     render(<EmployeeDeletePage params={{ id: '1' }} />)
@@ -96,6 +98,21 @@ describe('EmployeeDeletePage', () => {
     await waitFor(() => {
       expect(deleteMockEmployee).not.toHaveBeenCalled()
       expect(pushMock).not.toHaveBeenCalled()
+    })
+  })
+
+  it('mostra erro caso deleteMockEmployee lance exceção', async () => {
+    (getMockEmployees as jest.Mock).mockReturnValue([mockEmployee])
+    (deleteMockEmployee as jest.Mock).mockImplementation(() => { throw new Error('Falha') })
+    window.confirm = jest.fn(() => true)
+
+    render(<EmployeeDeletePage params={{ id: '1' }} />)
+    await waitFor(() => screen.getByText(/Deletar/i))
+
+    fireEvent.click(screen.getByText(/Deletar/i))
+
+    await waitFor(() => {
+      expect(screen.getByText(/Erro ao deletar funcionário/i)).toBeInTheDocument()
     })
   })
 })

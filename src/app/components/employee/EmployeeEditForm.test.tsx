@@ -2,8 +2,8 @@
 
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import EmployeeEditForm from "./EmployeeEditForm";
-import { POSITIONS } from "@/app/types/position";
-import type { Department } from "@/app/types/department";
+import { POSITIONS } from "../../../app/types/position";
+import type { Department } from "../../../app/types/department";
 
 describe("EmployeeEditForm", () => {
   const mockEmployee = {
@@ -44,7 +44,6 @@ describe("EmployeeEditForm", () => {
   it("mostra erros de validação ao tentar salvar com campos obrigatórios vazios", async () => {
     setup();
 
-    // Limpa valores obrigatórios
     fireEvent.change(screen.getByLabelText(/Nome/i), { target: { value: "" } });
     fireEvent.change(screen.getByLabelText(/CPF/i), { target: { value: "" } });
     fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: "" } });
@@ -64,12 +63,13 @@ describe("EmployeeEditForm", () => {
     expect(await screen.findByText(/Data de admissão é obrigatória/i)).toBeInTheDocument();
   });
 
-  it("chama onUpdate com os dados corretos quando o formulário é válido", async () => {
+  it("chama onUpdate com todos os dados corretos quando o formulário é válido", async () => {
     const onUpdateMock = jest.fn().mockResolvedValue(undefined);
     setup(onUpdateMock);
 
     // Altera alguns campos
     fireEvent.change(screen.getByLabelText(/Nome/i), { target: { value: "Maria Souza" } });
+    fireEvent.change(screen.getByLabelText(/Telefone/i), { target: { value: "11988888888" } });
     fireEvent.change(screen.getByLabelText(/Salário/i), { target: { value: "4000" } });
 
     fireEvent.click(screen.getByRole("button", { name: /Salvar/i }));
@@ -79,8 +79,15 @@ describe("EmployeeEditForm", () => {
     });
 
     const formDataArg = onUpdateMock.mock.calls[0][0] as FormData;
+
     expect(formDataArg.get("name")).toBe("Maria Souza");
-    expect(formDataArg.get("cpf")).toBe("12345678900"); // manteve o valor original
-    expect(formDataArg.get("salary")).toBe("4000"); // atualizado
+    expect(formDataArg.get("cpf")).toBe("12345678900");
+    expect(formDataArg.get("email")).toBe("joao@email.com");
+    expect(formDataArg.get("phone")).toBe("11988888888");
+    expect(formDataArg.get("address")).toBe("Rua A");
+    expect(formDataArg.get("position")).toBe(POSITIONS[0]);
+    expect(formDataArg.get("departmentId")).toBe("2");
+    expect(formDataArg.get("salary")).toBe("4000");
+    expect(formDataArg.get("admissionDate")).toBe("2023-01-01");
   });
 });

@@ -52,7 +52,6 @@ describe('EmployeeReactivatePage', () => {
 
   it('renderiza dados do funcionário e botão Reativar', async () => {
     jest.mocked(getEmployeeById).mockReturnValue(mockEmployee)
-
     render(<EmployeeReactivatePage params={{ id: '1' }} />)
 
     await waitFor(() => {
@@ -63,7 +62,6 @@ describe('EmployeeReactivatePage', () => {
 
   it('mostra erro quando funcionário não é encontrado', async () => {
     jest.mocked(getEmployeeById).mockReturnValue(null)
-
     render(<EmployeeReactivatePage params={{ id: '999' }} />)
 
     await waitFor(() => {
@@ -77,7 +75,12 @@ describe('EmployeeReactivatePage', () => {
 
     render(<EmployeeReactivatePage params={{ id: '1' }} />)
 
-    fireEvent.click(screen.getByText(/Reativar/i))
+    const btn = screen.getByText(/Reativar/i)
+    fireEvent.click(btn)
+
+    // Botão deve estar desabilitado durante a reativação
+    expect(btn).toBeDisabled()
+    expect(btn.textContent).toBe('Reativando...')
 
     act(() => {
       jest.advanceTimersByTime(1000)
@@ -103,6 +106,17 @@ describe('EmployeeReactivatePage', () => {
 
     await waitFor(() => {
       expect(screen.getByText(/Erro ao reativar funcionário/i)).toBeInTheDocument()
+      // Botão deve voltar a habilitado
+      expect(screen.getByText(/Reativar/i)).not.toBeDisabled()
     })
+  })
+
+  it('botão Cancelar redireciona', async () => {
+    jest.mocked(getEmployeeById).mockReturnValue(mockEmployee)
+    render(<EmployeeReactivatePage params={{ id: '1' }} />)
+
+    await waitFor(() => screen.getByText(/Cancelar/i))
+    fireEvent.click(screen.getByText(/Cancelar/i))
+    expect(pushMock).toHaveBeenCalledWith('/employee')
   })
 })

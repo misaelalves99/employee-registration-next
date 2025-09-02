@@ -46,33 +46,15 @@ describe("EmployeeForm", () => {
     const mockOnSubmit = jest.fn();
     render(<EmployeeForm departments={mockDepartments} onSubmit={mockOnSubmit} />);
 
-    fireEvent.change(screen.getByLabelText(/Nome/i), {
-      target: { value: "João da Silva" },
-    });
-    fireEvent.change(screen.getByLabelText(/CPF/i), {
-      target: { value: "12345678900" },
-    });
-    fireEvent.change(screen.getByLabelText(/Email/i), {
-      target: { value: "joao@email.com" },
-    });
-    fireEvent.change(screen.getByLabelText(/Telefone/i), {
-      target: { value: "11999999999" },
-    });
-    fireEvent.change(screen.getByLabelText(/Endereço/i), {
-      target: { value: "Rua X, 123" },
-    });
-    fireEvent.change(screen.getByLabelText(/Cargo/i), {
-      target: { value: "Gerente" },
-    });
-    fireEvent.change(screen.getByLabelText(/Departamento/i), {
-      target: { value: "2" },
-    });
-    fireEvent.change(screen.getByLabelText(/Salário/i), {
-      target: { value: "5000" },
-    });
-    fireEvent.change(screen.getByLabelText(/Data de Admissão/i), {
-      target: { value: "2025-08-20" },
-    });
+    fireEvent.change(screen.getByLabelText(/Nome/i), { target: { value: "João da Silva" } });
+    fireEvent.change(screen.getByLabelText(/CPF/i), { target: { value: "12345678900" } });
+    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: "joao@email.com" } });
+    fireEvent.change(screen.getByLabelText(/Telefone/i), { target: { value: "11999999999" } });
+    fireEvent.change(screen.getByLabelText(/Endereço/i), { target: { value: "Rua X, 123" } });
+    fireEvent.change(screen.getByLabelText(/Cargo/i), { target: { value: "Gerente" } });
+    fireEvent.change(screen.getByLabelText(/Departamento/i), { target: { value: "2" } });
+    fireEvent.change(screen.getByLabelText(/Salário/i), { target: { value: "5000" } });
+    fireEvent.change(screen.getByLabelText(/Data de Admissão/i), { target: { value: "2025-08-20" } });
 
     fireEvent.click(screen.getByRole("button", { name: /Cadastrar Funcionário/i }));
 
@@ -96,13 +78,50 @@ describe("EmployeeForm", () => {
   it("valida salário negativo", () => {
     render(<EmployeeForm departments={mockDepartments} onSubmit={jest.fn()} />);
 
-    fireEvent.change(screen.getByLabelText(/Salário/i), {
-      target: { value: "-1000" },
-    });
+    fireEvent.change(screen.getByLabelText(/Salário/i), { target: { value: "-1000" } });
     fireEvent.click(screen.getByRole("button", { name: /Cadastrar Funcionário/i }));
 
-    expect(
-      screen.getByText(/Salário deve ser um número positivo/i)
-    ).toBeInTheDocument();
+    expect(screen.getByText(/Salário deve ser um número positivo/i)).toBeInTheDocument();
+  });
+
+  it("altera status isActive corretamente", () => {
+    const mockOnSubmit = jest.fn();
+    render(<EmployeeForm departments={mockDepartments} onSubmit={mockOnSubmit} />);
+
+    const checkbox = screen.getByLabelText(/Ativo/i);
+    fireEvent.click(checkbox); // desmarca
+    fireEvent.click(screen.getByRole("button", { name: /Cadastrar Funcionário/i }));
+
+    // Como o resto do formulário está vazio, a validação impede submit
+    expect(mockOnSubmit).not.toHaveBeenCalled();
+  });
+
+  it("envia salário com casas decimais corretamente", () => {
+    const mockOnSubmit = jest.fn();
+    render(<EmployeeForm departments={mockDepartments} onSubmit={mockOnSubmit} />);
+
+    fireEvent.change(screen.getByLabelText(/Nome/i), { target: { value: "Teste" } });
+    fireEvent.change(screen.getByLabelText(/CPF/i), { target: { value: "123" } });
+    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: "a@b.com" } });
+    fireEvent.change(screen.getByLabelText(/Telefone/i), { target: { value: "123" } });
+    fireEvent.change(screen.getByLabelText(/Endereço/i), { target: { value: "Rua X" } });
+    fireEvent.change(screen.getByLabelText(/Cargo/i), { target: { value: "Gerente" } });
+    fireEvent.change(screen.getByLabelText(/Departamento/i), { target: { value: "1" } });
+    fireEvent.change(screen.getByLabelText(/Salário/i), { target: { value: "1234.56" } });
+    fireEvent.change(screen.getByLabelText(/Data de Admissão/i), { target: { value: "2025-01-01" } });
+
+    fireEvent.click(screen.getByRole("button", { name: /Cadastrar Funcionário/i }));
+
+    expect(mockOnSubmit).toHaveBeenCalledWith(expect.objectContaining({ salary: "1234.56" }));
+  });
+
+  it("não chama onSubmit se houver erros", () => {
+    const mockOnSubmit = jest.fn();
+    render(<EmployeeForm departments={mockDepartments} onSubmit={mockOnSubmit} />);
+
+    fireEvent.change(screen.getByLabelText(/Nome/i), { target: { value: "" } });
+    fireEvent.click(screen.getByRole("button", { name: /Cadastrar Funcionário/i }));
+
+    expect(mockOnSubmit).not.toHaveBeenCalled();
   });
 });

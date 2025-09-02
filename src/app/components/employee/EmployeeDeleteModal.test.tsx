@@ -44,19 +44,22 @@ describe("EmployeeDeleteModal", () => {
     expect(onCloseMock).toHaveBeenCalledTimes(1);
   });
 
-  it("chama onDeleted e onClose ao confirmar exclusão", async () => {
+  it("desabilita o botão durante exclusão e chama onDeleted e onClose ao confirmar", async () => {
     const onCloseMock = jest.fn();
     const onDeletedMock = jest.fn();
     setup(mockEmployee, onCloseMock, onDeletedMock);
 
-    fireEvent.click(screen.getByRole("button", { name: /Confirmar Exclusão/i }));
+    const confirmButton = screen.getByRole("button", { name: /Confirmar Exclusão/i });
+    fireEvent.click(confirmButton);
 
-    // Mostra o estado de loading
+    // Botão deve ficar desabilitado durante o loading
+    expect(confirmButton).toBeDisabled();
     expect(await screen.findByText(/Deletando/i)).toBeInTheDocument();
 
     await waitFor(() => {
       expect(onDeletedMock).toHaveBeenCalledTimes(1);
       expect(onCloseMock).toHaveBeenCalledTimes(1);
+      expect(confirmButton).not.toBeDisabled();
     });
   });
 
@@ -64,7 +67,8 @@ describe("EmployeeDeleteModal", () => {
     const onCloseMock = jest.fn();
     setup(mockEmployee, onCloseMock);
 
-    fireEvent.click(screen.getByText(/Confirmar Exclusão/i).closest("div")!.parentElement!);
+    const backdrop = screen.getByText(/Confirmar Exclusão/i).closest("div")!.parentElement!;
+    fireEvent.click(backdrop);
     expect(onCloseMock).toHaveBeenCalled();
   });
 });

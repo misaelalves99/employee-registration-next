@@ -26,6 +26,7 @@ jest.mock('../../lib/mock/employees', () => ({
 
 describe('CreateEmployeePage', () => {
   const pushMock = jest.fn()
+
   beforeEach(() => {
     (useRouter as jest.Mock).mockReturnValue({ push: pushMock })
     (getMockDepartments as jest.Mock).mockResolvedValue([{ id: 1, name: 'TI' }])
@@ -44,9 +45,14 @@ describe('CreateEmployeePage', () => {
     await waitFor(() => {
       expect(screen.getByLabelText(/Nome/i)).toBeInTheDocument()
       expect(screen.getByLabelText(/CPF/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/Email/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/Telefone/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/Endereço/i)).toBeInTheDocument()
       expect(screen.getByLabelText(/Salário/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/Data de Admissão/i)).toBeInTheDocument()
       expect(screen.getByLabelText(/Departamento/i)).toBeInTheDocument()
       expect(screen.getByLabelText(/Cargo/i)).toBeInTheDocument()
+      expect(screen.getByLabelText(/Ativo/i)).toBeInTheDocument()
     })
   })
 
@@ -56,7 +62,11 @@ describe('CreateEmployeePage', () => {
 
     fireEvent.change(screen.getByLabelText(/Nome/i), { target: { value: 'João Silva' } })
     fireEvent.change(screen.getByLabelText(/CPF/i), { target: { value: '123.456.789-00' } })
+    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'joao@example.com' } })
+    fireEvent.change(screen.getByLabelText(/Telefone/i), { target: { value: '11999999999' } })
+    fireEvent.change(screen.getByLabelText(/Endereço/i), { target: { value: 'Rua A, 123' } })
     fireEvent.change(screen.getByLabelText(/Salário/i), { target: { value: '5000' } })
+    fireEvent.change(screen.getByLabelText(/Data de Admissão/i), { target: { value: '2023-01-01' } })
     fireEvent.change(screen.getByLabelText(/Departamento/i), { target: { value: '1' } })
     fireEvent.change(screen.getByLabelText(/Cargo/i), { target: { value: 'Desenvolvedor' } })
     fireEvent.click(screen.getByLabelText(/Ativo/i))
@@ -68,7 +78,11 @@ describe('CreateEmployeePage', () => {
         expect.objectContaining({
           name: 'João Silva',
           cpf: '123.456.789-00',
+          email: 'joao@example.com',
+          phone: '11999999999',
+          address: 'Rua A, 123',
           salary: 5000,
+          admissionDate: '2023-01-01',
           departmentId: 1,
           position: 'Desenvolvedor',
           isActive: true,
@@ -76,5 +90,13 @@ describe('CreateEmployeePage', () => {
       )
       expect(pushMock).toHaveBeenCalledWith('/employee')
     })
+  })
+
+  it('botão de voltar redireciona para /employee', async () => {
+    render(<CreateEmployeePage />)
+    await waitFor(() => screen.getByRole('button', { name: /Voltar/i }))
+
+    fireEvent.click(screen.getByRole('button', { name: /Voltar/i }))
+    expect(pushMock).toHaveBeenCalledWith('/employee')
   })
 })

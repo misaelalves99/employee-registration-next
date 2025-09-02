@@ -15,7 +15,7 @@ describe('Navbar', () => {
     jest.clearAllMocks()
   })
 
-  it('renderiza os links corretamente', () => {
+  it('renderiza todos os links corretamente', () => {
     usePathname.mockReturnValue('/')
     render(<Navbar />)
 
@@ -25,24 +25,30 @@ describe('Navbar', () => {
     expect(screen.getByText('Privacidade')).toBeInTheDocument()
   })
 
-  it('marca o link ativo de acordo com o pathname', () => {
+  it('marca o link Início como ativo quando pathname é /', () => {
+    usePathname.mockReturnValue('/')
+    render(<Navbar />)
+
+    expect(screen.getByText('Início').className).toContain('activeLink')
+    expect(screen.getByText('Funcionários').className).not.toContain('activeLink')
+    expect(screen.getByText('Privacidade').className).not.toContain('activeLink')
+  })
+
+  it('marca o link Funcionários como ativo quando pathname é /employee', () => {
     usePathname.mockReturnValue('/employee')
     render(<Navbar />)
 
-    const homeLink = screen.getByText('Início')
-    const employeeLink = screen.getByText('Funcionários')
-    const privacyLink = screen.getByText('Privacidade')
-
-    expect(homeLink.className).not.toContain('activeLink')
-    expect(employeeLink.className).toContain('activeLink')
-    expect(privacyLink.className).not.toContain('activeLink')
+    expect(screen.getByText('Início').className).not.toContain('activeLink')
+    expect(screen.getByText('Funcionários').className).toContain('activeLink')
+    expect(screen.getByText('Privacidade').className).not.toContain('activeLink')
   })
 
-  it('marca o link de privacidade como ativo quando pathname é /privacy', () => {
+  it('marca o link Privacidade como ativo quando pathname é /privacy', () => {
     usePathname.mockReturnValue('/privacy')
     render(<Navbar />)
 
-    const privacyLink = screen.getByText('Privacidade')
-    expect(privacyLink.className).toContain('activeLink')
+    expect(screen.getByText('Início').className).not.toContain('activeLink')
+    expect(screen.getByText('Funcionários').className).not.toContain('activeLink')
+    expect(screen.getByText('Privacidade').className).toContain('activeLink')
   })
 })

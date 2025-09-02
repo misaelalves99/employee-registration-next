@@ -67,6 +67,7 @@ describe('EditEmployeePage', () => {
       expect(screen.getByDisplayValue(mockEmployee.position)).toBeInTheDocument()
       expect(screen.getByDisplayValue(String(mockEmployee.departmentId))).toBeInTheDocument()
       expect(screen.getByDisplayValue(String(mockEmployee.salary))).toBeInTheDocument()
+      expect(screen.getByLabelText(/Ativo/i)).toBeChecked()
     })
   })
 
@@ -90,10 +91,26 @@ describe('EditEmployeePage', () => {
     await waitFor(() => screen.getByText(/Salvar/i))
 
     fireEvent.change(screen.getByLabelText(/Nome/i), { target: { value: 'João Atualizado' } })
+    fireEvent.change(screen.getByLabelText(/Email/i), { target: { value: 'novo@email.com' } })
+    fireEvent.change(screen.getByLabelText(/Cargo/i), { target: { value: 'Analista' } })
+    fireEvent.change(screen.getByLabelText(/Departamento/i), { target: { value: '2' } })
+    fireEvent.change(screen.getByLabelText(/Salário/i), { target: { value: '6000' } })
+    fireEvent.click(screen.getByLabelText(/Ativo/i)) // alterna checkbox
+
     fireEvent.click(screen.getByText(/Salvar/i))
 
     await waitFor(() => {
-      expect(updateMockEmployee).toHaveBeenCalledWith(mockEmployee.id, expect.objectContaining({ name: 'João Atualizado' }))
+      expect(updateMockEmployee).toHaveBeenCalledWith(
+        mockEmployee.id,
+        expect.objectContaining({
+          name: 'João Atualizado',
+          email: 'novo@email.com',
+          position: 'Analista',
+          departmentId: 2,
+          salary: 6000,
+          isActive: false,
+        })
+      )
       expect(pushMock).toHaveBeenCalledWith('/employee')
     })
   })
