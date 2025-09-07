@@ -8,9 +8,9 @@ export interface EmployeeFormData {
   email: string;
   phone: string;
   address: string;
-  position: PositionFormValue;  // aceita '' + posições válidas
-  departmentId: string;         // mantido como string (como no form)
-  salary: string;               // mantido como string (como no form)
+  position: PositionFormValue;
+  departmentId: string;
+  salary: string;
   admissionDate: string;
   isActive: boolean;
 }

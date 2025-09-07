@@ -3,6 +3,24 @@
 import { getMockEmployees, deleteMockEmployee } from './mockData';
 import { Employee } from '../../types/employee';
 
+// Funções adicionais simulando create e update no localStorage
+function createMockEmployee(employee: Employee) {
+  const employees = getMockEmployees();
+  employees.push(employee);
+  localStorage.setItem('mock_employees', JSON.stringify(employees));
+}
+
+function updateMockEmployee(id: number, data: Partial<Employee>) {
+  const employees = getMockEmployees();
+  const index = employees.findIndex(e => e.id === id);
+  if (index !== -1) {
+    employees[index] = { ...employees[index], ...data };
+    localStorage.setItem('mock_employees', JSON.stringify(employees));
+    return true;
+  }
+  return false;
+}
+
 describe('mockData', () => {
   const EMPLOYEE_KEY = 'mock_employees';
 
@@ -52,5 +70,25 @@ describe('mockData', () => {
     const employees = getMockEmployees();
     expect(employees).toHaveLength(1);
     expect(employees[0].id).toBe(2);
+  });
+
+  it('createMockEmployee adiciona funcionário no localStorage', () => {
+    const newEmp: Employee = { ...mockEmployee, id: 3, name: 'Novo' };
+    createMockEmployee(newEmp);
+    const employees = getMockEmployees();
+    expect(employees).toHaveLength(2);
+    expect(employees.find(e => e.id === 3)?.name).toBe('Novo');
+  });
+
+  it('updateMockEmployee atualiza funcionário existente', () => {
+    const updated = updateMockEmployee(1, { name: 'Atualizado' });
+    const employees = getMockEmployees();
+    expect(updated).toBe(true);
+    expect(employees.find(e => e.id === 1)?.name).toBe('Atualizado');
+  });
+
+  it('updateMockEmployee retorna false se funcionário não existir', () => {
+    const updated = updateMockEmployee(999, { name: 'Teste' });
+    expect(updated).toBe(false);
   });
 });

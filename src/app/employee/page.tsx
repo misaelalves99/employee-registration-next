@@ -4,10 +4,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Employee } from '../types/employee';
 import EmployeeFilter from '../components/employee/EmployeeFilter';
 import EmployeeDeleteModal from '../components/employee/EmployeeDeleteModal';
-import { mockEmployees } from '../lib/mock/employees';
+import { useEmployee } from '../hooks/useEmployee';
 import styles from './EmployeePage.module.css';
 
 interface EmployeeFilters {
@@ -18,13 +17,14 @@ interface EmployeeFilters {
 }
 
 export default function EmployeePage() {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const { employees: allEmployees, updateEmployee, deleteEmployee } = useEmployee();
+  const [employees, setEmployees] = useState(allEmployees);
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<EmployeeFilters>({});
-  const [selectedEmployeeToDelete, setSelectedEmployeeToDelete] = useState<Employee | null>(null);
+  const [selectedEmployeeToDelete, setSelectedEmployeeToDelete] = useState<number | null>(null);
 
   const fetchEmployees = useCallback(() => {
-    let filtered = [...mockEmployees];
+    let filtered = [...allEmployees];
 
     if (query) {
       const q = query.toLowerCase();
@@ -48,38 +48,34 @@ export default function EmployeePage() {
       }
     });
 
+    // Ordena por ID crescente
+    filtered.sort((a, b) => a.id - b.id);
+
     setEmployees(filtered);
-  }, [query, filters]);
+  }, [allEmployees, query, filters]);
 
   useEffect(() => {
     fetchEmployees();
   }, [fetchEmployees]);
 
-  const openDeleteModal = (employee: Employee) => setSelectedEmployeeToDelete(employee);
+  const openDeleteModal = (id: number) => setSelectedEmployeeToDelete(id);
   const closeDeleteModal = () => setSelectedEmployeeToDelete(null);
 
   const handleDeleteConfirmed = () => {
-    if (!selectedEmployeeToDelete) return;
-    const index = mockEmployees.findIndex((e) => e.id === selectedEmployeeToDelete.id);
-    if (index !== -1) {
-      mockEmployees.splice(index, 1);
-      fetchEmployees();
+    if (selectedEmployeeToDelete !== null) {
+      deleteEmployee(selectedEmployeeToDelete);
+      closeDeleteModal();
     }
-    closeDeleteModal();
   };
 
-  const toggleActiveStatus = (emp: Employee) => {
-    const action = emp.isActive ? 'inativar' : 'ativar';
-    const confirmAction = window.confirm(
-      `Tem certeza que deseja ${action} o funcionário ${emp.name}?`
-    );
-    if (!confirmAction) return;
+  const toggleActiveStatus = (id: number) => {
+    const emp = allEmployees.find((e) => e.id === id);
+    if (!emp) return;
 
-    const index = mockEmployees.findIndex((e) => e.id === emp.id);
-    if (index !== -1) {
-      mockEmployees[index].isActive = !emp.isActive;
-      fetchEmployees();
-    }
+    const action = emp.isActive ? 'inativar' : 'ativar';
+    if (!window.confirm(`Tem certeza que deseja ${action} o funcionário ${emp.name}?`)) return;
+
+    updateEmployee(id, { ...emp, isActive: !emp.isActive });
   };
 
   return (
@@ -87,12 +83,10 @@ export default function EmployeePage() {
       <h1 className={styles.title}>Lista de Funcionários</h1>
 
       <div className={styles.contentWrapper}>
-        {/* Sidebar com filtros */}
         <aside className={styles.sidebar}>
           <EmployeeFilter onFilterChange={setFilters} />
         </aside>
 
-        {/* Seção principal */}
         <section className={styles.rightSection}>
           <div className={styles.topBar}>
             <Link href="/employee/create" className={styles.btnPrimary}>
@@ -114,6 +108,7 @@ export default function EmployeePage() {
             <table className={styles.table}>
               <thead className={styles.thead}>
                 <tr>
+                  <th className={styles.th}>ID</th>
                   <th className={styles.th}>Nome</th>
                   <th className={styles.th}>Cargo</th>
                   <th className={styles.th}>Departamento</th>
@@ -124,6 +119,7 @@ export default function EmployeePage() {
               <tbody>
                 {employees.map((emp) => (
                   <tr key={emp.id} className={styles.trHover}>
+                    <td className={styles.td}>{emp.id}</td>
                     <td className={styles.td}>{emp.name}</td>
                     <td className={styles.td}>{emp.position}</td>
                     <td className={styles.td}>{emp.department?.name || '-'}</td>
@@ -142,7 +138,7 @@ export default function EmployeePage() {
                         Editar
                       </Link>
                       <button
-                        onClick={() => toggleActiveStatus(emp)}
+                        onClick={() => toggleActiveStatus(emp.id)}
                         className={`${styles.btn} ${
                           emp.isActive ? styles.btnSecondary : styles.btnSuccess
                         }`}
@@ -151,7 +147,7 @@ export default function EmployeePage() {
                         {emp.isActive ? 'Inativar' : 'Ativar'}
                       </button>
                       <button
-                        onClick={() => openDeleteModal(emp)}
+                        onClick={() => openDeleteModal(emp.id)}
                         className={`${styles.btn} ${styles.btnDanger}`}
                         aria-label="Excluir funcionário"
                       >
@@ -166,9 +162,9 @@ export default function EmployeePage() {
         </section>
       </div>
 
-      {selectedEmployeeToDelete && (
+      {selectedEmployeeToDelete !== null && (
         <EmployeeDeleteModal
-          employee={selectedEmployeeToDelete}
+          employee={allEmployees.find((e) => e.id === selectedEmployeeToDelete)!}
           onClose={closeDeleteModal}
           onDeleted={handleDeleteConfirmed}
         />

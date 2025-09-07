@@ -4,8 +4,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { Employee } from '../../../types/employee'
-import { getMockEmployees, deleteMockEmployee } from '../../../lib/mock/mockData'
+import { useEmployee } from '../../../hooks/useEmployee'
 import styles from './EmployeeDeletePage.module.css'
 
 interface EmployeeDeletePageProps {
@@ -14,12 +13,12 @@ interface EmployeeDeletePageProps {
 
 export default function EmployeeDeletePage({ params }: EmployeeDeletePageProps) {
   const router = useRouter()
-  const [employee, setEmployee] = useState<Employee | null>(null)
+  const { employees, deleteEmployee } = useEmployee() // <- contexto
+  const [employee, setEmployee] = useState<typeof employees[0] | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    const employees = getMockEmployees()
     const found = employees.find(emp => emp.id === Number(params.id))
     if (!found) {
       setError('Funcionário não encontrado.')
@@ -27,14 +26,16 @@ export default function EmployeeDeletePage({ params }: EmployeeDeletePageProps) 
       setEmployee(found)
     }
     setLoading(false)
-  }, [params.id])
+  }, [employees, params.id])
 
   const handleDelete = () => {
-    const confirmDelete = confirm(`Tem certeza que deseja deletar o funcionário ${employee?.name}?`)
+    if (!employee) return
+
+    const confirmDelete = confirm(`Tem certeza que deseja deletar o funcionário ${employee.name}?`)
     if (!confirmDelete) return
 
     try {
-      deleteMockEmployee(Number(params.id))
+      deleteEmployee(employee.id) // <- contexto
       router.push('/employee')
     } catch (err) {
       console.error(err)

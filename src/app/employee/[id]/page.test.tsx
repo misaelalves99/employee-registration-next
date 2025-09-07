@@ -1,42 +1,43 @@
 // src/app/employee/[id]/page.test.tsx
+import { render, screen } from '@testing-library/react';
+import EmployeeDetailsPage from './page';
+import { useEmployee } from '../../hooks/useEmployee';
+import { useRouter } from 'next/navigation';
+import '@testing-library/jest-dom';
 
-import { render, screen } from '@testing-library/react'
-import EmployeeDetailsPage from './page'
-import { getEmployeeById } from '../../lib/mock/employees'
-import '@testing-library/jest-dom'
+// Mock do useEmployee
+jest.mock('../../hooks/useEmployee', () => ({
+  useEmployee: jest.fn(),
+}));
 
-// Mock do getEmployeeById
-jest.mock('../../lib/mock/employees', () => ({
-  getEmployeeById: jest.fn(),
-}))
-
-// Mock do next/navigation notFound
+// Mock do useRouter
+const replaceMock = jest.fn();
 jest.mock('next/navigation', () => ({
-  notFound: jest.fn(),
-}))
+  useRouter: () => ({
+    replace: replaceMock,
+  }),
+}));
 
 describe('EmployeeDetailsPage', () => {
-  const mockedGetEmployeeById = getEmployeeById as jest.Mock
-  const { notFound } = require('next/navigation')
-
   beforeEach(() => {
-    jest.clearAllMocks()
-  })
+    jest.clearAllMocks();
+  });
 
-  it('chama notFound quando o id não é número', () => {
-    render(<EmployeeDetailsPage params={{ id: 'abc' }} />)
-    expect(notFound).toHaveBeenCalled()
-  })
+  it('redireciona quando o id não é número', () => {
+    (useEmployee as jest.Mock).mockReturnValue({ employees: [] });
+    render(<EmployeeDetailsPage params={{ id: 'abc' }} />);
+    expect(replaceMock).toHaveBeenCalledWith('/employee');
+  });
 
   it('exibe mensagem de não encontrado quando funcionário não existe', () => {
-    mockedGetEmployeeById.mockReturnValueOnce(null)
-    render(<EmployeeDetailsPage params={{ id: '999' }} />)
+    (useEmployee as jest.Mock).mockReturnValue({ employees: [] });
+    render(<EmployeeDetailsPage params={{ id: '999' }} />);
 
-    expect(screen.getByText('Funcionário não encontrado')).toBeInTheDocument()
-    expect(screen.getByText('Voltar para a lista')).toBeInTheDocument()
-  })
+    expect(screen.getByText('Funcionário não encontrado')).toBeInTheDocument();
+    expect(screen.getByText('Voltar para a lista')).toBeInTheDocument();
+  });
 
-  it('exibe corretamente os detalhes do funcionário quando encontrado', () => {
+  it('exibe corretamente os detalhes do funcionário encontrado', () => {
     const employee = {
       id: 1,
       name: 'João Silva',
@@ -49,46 +50,35 @@ describe('EmployeeDetailsPage', () => {
       salary: 5000,
       admissionDate: '2023-01-01',
       isActive: true,
-    }
-    mockedGetEmployeeById.mockReturnValueOnce(employee)
+    };
+    (useEmployee as jest.Mock).mockReturnValue({ employees: [employee] });
 
-    render(<EmployeeDetailsPage params={{ id: '1' }} />)
+    render(<EmployeeDetailsPage params={{ id: '1' }} />);
 
-    // Título da página
-    expect(screen.getByText('Detalhes do Funcionário')).toBeInTheDocument()
-
-    // Campos principais
-    expect(screen.getByText('Nome:')).toBeInTheDocument()
-    expect(screen.getByText(employee.name)).toBeInTheDocument()
-    expect(screen.getByText('CPF:')).toBeInTheDocument()
-    expect(screen.getByText(employee.cpf)).toBeInTheDocument()
-    expect(screen.getByText('Email:')).toBeInTheDocument()
-    expect(screen.getByText(employee.email)).toBeInTheDocument()
-    expect(screen.getByText('Telefone:')).toBeInTheDocument()
-    expect(screen.getByText(employee.phone)).toBeInTheDocument()
-    expect(screen.getByText('Endereço:')).toBeInTheDocument()
-    expect(screen.getByText(employee.address)).toBeInTheDocument()
-    expect(screen.getByText('Cargo:')).toBeInTheDocument()
-    expect(screen.getByText(employee.position)).toBeInTheDocument()
-    expect(screen.getByText('Departamento:')).toBeInTheDocument()
-    expect(screen.getByText(employee.department.name)).toBeInTheDocument()
-
-    // Salário formatado
-    expect(screen.getByText('Salário:')).toBeInTheDocument()
-    expect(screen.getByText('R$ 5.000,00')).toBeInTheDocument()
-
-    // Data de admissão formatada
-    expect(screen.getByText('Data de Admissão:')).toBeInTheDocument()
-    expect(screen.getByText('01/01/2023')).toBeInTheDocument()
-
-    // Status
-    expect(screen.getByText('Status:')).toBeInTheDocument()
-    expect(screen.getByText('Ativo')).toBeInTheDocument()
-
-    // Botões
-    expect(screen.getByText('Voltar')).toBeInTheDocument()
-    expect(screen.getByText('Editar')).toBeInTheDocument()
-  })
+    expect(screen.getByText('Detalhes do Funcionário')).toBeInTheDocument();
+    expect(screen.getByText('Nome:')).toBeInTheDocument();
+    expect(screen.getByText(employee.name)).toBeInTheDocument();
+    expect(screen.getByText('CPF:')).toBeInTheDocument();
+    expect(screen.getByText(employee.cpf)).toBeInTheDocument();
+    expect(screen.getByText('Email:')).toBeInTheDocument();
+    expect(screen.getByText(employee.email)).toBeInTheDocument();
+    expect(screen.getByText('Telefone:')).toBeInTheDocument();
+    expect(screen.getByText(employee.phone)).toBeInTheDocument();
+    expect(screen.getByText('Endereço:')).toBeInTheDocument();
+    expect(screen.getByText(employee.address)).toBeInTheDocument();
+    expect(screen.getByText('Cargo:')).toBeInTheDocument();
+    expect(screen.getByText(employee.position)).toBeInTheDocument();
+    expect(screen.getByText('Departamento:')).toBeInTheDocument();
+    expect(screen.getByText(employee.department.name)).toBeInTheDocument();
+    expect(screen.getByText('Salário:')).toBeInTheDocument();
+    expect(screen.getByText('R$ 5.000,00')).toBeInTheDocument();
+    expect(screen.getByText('Data de Admissão:')).toBeInTheDocument();
+    expect(screen.getByText('01/01/2023')).toBeInTheDocument();
+    expect(screen.getByText('Status:')).toBeInTheDocument();
+    expect(screen.getByText('Ativo')).toBeInTheDocument();
+    expect(screen.getByText('Voltar')).toBeInTheDocument();
+    expect(screen.getByText('Editar')).toBeInTheDocument();
+  });
 
   it('exibe "Não informado" para campos opcionais vazios', () => {
     const employee = {
@@ -103,17 +93,17 @@ describe('EmployeeDetailsPage', () => {
       salary: 4000,
       admissionDate: '2022-06-15',
       isActive: false,
-    }
-    mockedGetEmployeeById.mockReturnValueOnce(employee)
+    };
+    (useEmployee as jest.Mock).mockReturnValue({ employees: [employee] });
 
-    render(<EmployeeDetailsPage params={{ id: '2' }} />)
+    render(<EmployeeDetailsPage params={{ id: '2' }} />);
 
-    expect(screen.getByText('Telefone:')).toBeInTheDocument()
-    expect(screen.getByText('Não informado')).toBeInTheDocument()
-    expect(screen.getByText('Endereço:')).toBeInTheDocument()
-    expect(screen.getByText('Não informado')).toBeInTheDocument()
-    expect(screen.getByText('Departamento:')).toBeInTheDocument()
-    expect(screen.getByText('Não informado')).toBeInTheDocument()
-    expect(screen.getByText('Inativo')).toBeInTheDocument()
-  })
-})
+    expect(screen.getByText('Telefone:')).toBeInTheDocument();
+    expect(screen.getByText('Não informado')).toBeInTheDocument();
+    expect(screen.getByText('Endereço:')).toBeInTheDocument();
+    expect(screen.getByText('Não informado')).toBeInTheDocument();
+    expect(screen.getByText('Departamento:')).toBeInTheDocument();
+    expect(screen.getByText('Não informado')).toBeInTheDocument();
+    expect(screen.getByText('Inativo')).toBeInTheDocument();
+  });
+});

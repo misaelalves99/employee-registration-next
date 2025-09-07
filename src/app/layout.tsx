@@ -7,6 +7,8 @@ import Footer from './components/footer/Footer';
 import styles from './layout.module.css';
 import './globals.css';
 
+import { EmployeeProvider } from './contexts/EmployeeProvider';
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -18,11 +20,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="pt-BR">
       <body className={`${inter.className} ${styles.body}`}>
-        <Navbar />
-        <main className={styles.main}>
-          {children}
-        </main>
-        <Footer />
+        <EmployeeProvider>
+          <Navbar />
+          <main className={styles.main}>
+            {children}
+          </main>
+          <Footer />
+        </EmployeeProvider>
       </body>
     </html>
   );

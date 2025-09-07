@@ -4,15 +4,16 @@
 
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useEmployee } from '../../hooks/useEmployee'
 import { Department } from '../../types/department'
 import { Position } from '../../types/position'
-import { createMockEmployee } from '../../lib/mock/employees'
 import { getMockDepartments } from '../../lib/mock/departments'
 import { getMockPositions } from '../../lib/mock/positions'
 import styles from './CreateEmployeeForm.module.css'
 
 export default function CreateEmployeePage() {
   const router = useRouter()
+  const { employees: allEmployees, addEmployee } = useEmployee() // <- contexto
   const [departments, setDepartments] = useState<Department[]>([])
   const [positions, setPositions] = useState<Position[]>([])
   const [loading, setLoading] = useState(true)
@@ -51,20 +52,31 @@ export default function CreateEmployeePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    await createMockEmployee({
-      id: Date.now(),
+
+    // Gera próximo ID incremental
+    const nextId =
+      allEmployees.length > 0
+        ? Math.max(...allEmployees.map(emp => emp.id)) + 1
+        : 1
+
+    const deptId = formData.departmentId ? parseInt(formData.departmentId) : null
+    const department = deptId ? departments.find(d => d.id === deptId) : undefined
+
+    addEmployee({
+      id: nextId,
       name: formData.name,
       cpf: formData.cpf,
       email: formData.email,
-      phone: formData.phone,
-      address: formData.address,
+      phone: formData.phone || undefined,
+      address: formData.address || undefined,
       salary: parseFloat(formData.salary),
       admissionDate: formData.admissionDate || new Date().toISOString(),
       position: formData.position,
-      departmentId: formData.departmentId ? parseInt(formData.departmentId) : null,
-      department: departments.find(d => d.id === parseInt(formData.departmentId)),
+      departmentId: deptId,
+      department,
       isActive: formData.isActive,
     })
+
     router.push('/employee')
   }
 
@@ -74,15 +86,14 @@ export default function CreateEmployeePage() {
     <div className={styles.container}>
       <h1 className={styles.title}>Criar Funcionário</h1>
       <form onSubmit={handleSubmit} className={styles.form}>
-        {[
-          ['name', 'Nome'],
-          ['cpf', 'CPF'],
-          ['email', 'Email'],
-          ['phone', 'Telefone'],
-          ['address', 'Endereço'],
-        ].map(([key, label]) => (
+        {['name','cpf','email','phone','address'].map((key) => (
           <div className={styles.field} key={key}>
-            <label htmlFor={key} className={styles.label}>{label}:</label>
+            <label htmlFor={key} className={styles.label}>
+              {key === 'name' ? 'Nome' :
+               key === 'cpf' ? 'CPF' :
+               key === 'email' ? 'Email' :
+               key === 'phone' ? 'Telefone' : 'Endereço'}:
+            </label>
             <input
               type="text"
               id={key}
@@ -167,10 +178,7 @@ export default function CreateEmployeePage() {
           <label htmlFor="isActive" className={styles.label}>Ativo</label>
         </div>
 
-        <button
-          type="submit"
-          className={styles.button}
-        >
+        <button type="submit" className={styles.button}>
           Criar Funcionário
         </button>
         <button

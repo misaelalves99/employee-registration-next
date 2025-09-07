@@ -4,28 +4,29 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Employee } from '../../../types/employee';
+import { useEmployee } from '../../../hooks/useEmployee';
 import { EmployeeReactivatePageProps } from '../../../types/employeeReactivate';
-import { getEmployeeById, updateMockEmployee } from '../../../lib/mock/employees';
 import styles from './EmployeeReactivatePage.module.css';
 
 export default function EmployeeReactivatePage({ params }: EmployeeReactivatePageProps) {
   const router = useRouter();
-  const [employee, setEmployee] = useState<Employee | null>(null);
+  const { employees, updateEmployee } = useEmployee();
+  const [employee, setEmployee] = useState<typeof employees[0] | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [reactivating, setReactivating] = useState(false);
 
   useEffect(() => {
-    const id = parseInt(params.id);
-    const found = getEmployeeById(id);
+    const id = Number(params.id);
+    const found = employees.find(emp => emp.id === id);
+
     if (!found) {
       setError('Funcionário não encontrado.');
     } else {
       setEmployee(found);
     }
     setLoading(false);
-  }, [params.id]);
+  }, [params.id, employees]);
 
   function handleReactivate() {
     if (!employee) return;
@@ -33,15 +34,14 @@ export default function EmployeeReactivatePage({ params }: EmployeeReactivatePag
     setReactivating(true);
     setError(null);
 
+    // Simula delay como antes
     setTimeout(() => {
-      const success = updateMockEmployee(employee.id, { isActive: true });
-      if (success) {
-        router.push('/employee');
-      } else {
-        setError('Erro ao reativar funcionário.');
-        setReactivating(false);
-      }
-    }, 1000);
+      // Atualiza o funcionário para ativo
+      updateEmployee(employee.id, { ...employee, isActive: true });
+
+      // Redireciona para a lista
+      router.push('/employee');
+    }, 500);
   }
 
   if (loading) return <p className={styles.container}>Carregando...</p>;

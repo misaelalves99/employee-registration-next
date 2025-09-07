@@ -5,10 +5,10 @@
 import { useState, useEffect, FormEvent } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { useEmployee } from '../../../hooks/useEmployee';
 import type { EmployeeForm } from '../../../types/employeeForm';
 import type { Department } from '../../../types/department';
 import { POSITIONS } from '../../../types/position';
-import { getEmployeeById, updateMockEmployee } from '../../../lib/mock/employees';
 import { getMockDepartments } from '../../../lib/mock/departments';
 import styles from './EditEmployeePage.module.css';
 
@@ -18,6 +18,7 @@ interface EditEmployeePageProps {
 
 export default function EditEmployeePage({ params }: EditEmployeePageProps) {
   const router = useRouter();
+  const { employees, updateEmployee } = useEmployee();
   const [employee, setEmployee] = useState<EmployeeForm | null>(null);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [loading, setLoading] = useState(true);
@@ -25,7 +26,7 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
 
   useEffect(() => {
     const id = Number(params.id);
-    const data = getEmployeeById(id);
+    const data = employees.find(emp => emp.id === id);
 
     if (!data) {
       setErrors(['Funcionário não encontrado']);
@@ -41,27 +42,29 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
       phone: data.phone || '',
       address: data.address || '',
       position: data.position,
-      departmentId: data.department?.id ?? null,
+      departmentId: data.department?.id ?? null, // <-- null, não undefined
       salary: data.salary,
-      admissionDate: data.admissionDate.slice(0, 10), // garante formato yyyy-mm-dd
+      admissionDate: data.admissionDate.slice(0, 10),
       isActive: data.isActive,
     });
 
-    getMockDepartments().then(setDepartments);
-    setLoading(false);
-  }, [params.id]);
+    getMockDepartments()
+      .then(setDepartments)
+      .finally(() => setLoading(false));
+  }, [params.id, employees]);
 
-  async function handleSubmit(e: FormEvent) {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!employee) return;
 
-    const updated = updateMockEmployee(employee.id, employee);
+    const department =
+      employee.departmentId !== null
+        ? departments.find(d => d.id === employee.departmentId)
+        : undefined;
 
-    if (updated) {
-      router.push('/employee');
-    } else {
-      setErrors(['Erro ao salvar dados do funcionário.']);
-    }
+    updateEmployee(employee.id, { ...employee, department });
+
+    router.push('/employee');
   }
 
   if (loading) return <p className={styles.loading}>Carregando...</p>;
@@ -80,7 +83,6 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
       )}
 
       <form onSubmit={handleSubmit} className={styles.form}>
-        {/* Campos de texto padrão */}
         {(['name', 'cpf', 'email', 'phone', 'address'] as const).map((key) => (
           <div className={styles.field} key={key}>
             <label className={styles.label}>
@@ -104,7 +106,6 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
           </div>
         ))}
 
-        {/* Cargo */}
         <div className={styles.field}>
           <label className={styles.label}>Cargo</label>
           <select
@@ -123,7 +124,6 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
           </select>
         </div>
 
-        {/* Departamento */}
         <div className={styles.field}>
           <label className={styles.label}>Departamento</label>
           <select
@@ -132,7 +132,7 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
             onChange={(e) =>
               setEmployee({
                 ...employee,
-                departmentId: e.target.value ? Number(e.target.value) : null,
+                departmentId: e.target.value ? Number(e.target.value) : null, // <-- null
               })
             }
           >
@@ -145,7 +145,6 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
           </select>
         </div>
 
-        {/* Salário */}
         <div className={styles.field}>
           <label className={styles.label}>Salário</label>
           <input
@@ -160,7 +159,6 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
           />
         </div>
 
-        {/* Data de Admissão */}
         <div className={styles.field}>
           <label className={styles.label}>Data de Admissão</label>
           <input
@@ -172,7 +170,6 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
           />
         </div>
 
-        {/* Checkbox Ativo */}
         <div className={styles.checkboxContainer}>
           <label className={styles.checkboxLabel}>
             <input
@@ -184,7 +181,6 @@ export default function EditEmployeePage({ params }: EditEmployeePageProps) {
           </label>
         </div>
 
-        {/* Botões */}
         <div className={styles.buttons}>
           <button type="submit" className={`${styles.btn} ${styles.btnPrimary}`}>
             Salvar
