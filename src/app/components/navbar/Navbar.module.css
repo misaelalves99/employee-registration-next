@@ -1,57 +1,158 @@
+/* src/app/components/navbar/Navbar.module.css */
+
+/* ======================
+   Navbar
+====================== */
 .navbar {
-  background-color: #2563eb; /* blue-600 */
-  color: #ffffff;
-  padding: 1.3rem 1.5rem;
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.5);
+  background: var(--color-primary);
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  position: relative;
+  z-index: 100;
 }
 
 .container {
-  max-width: 1250px;
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 1300px;
+  margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 2rem;
 }
 
 .brand {
-  font-size: 1.25rem; /* text-xl */
+  font-size: 1.5rem;
   font-weight: 700;
+  color: var(--color-text-light);
   text-decoration: none;
-  color: inherit;
-  user-select: none;
   transition: color 0.3s ease;
 }
-
 .brand:hover {
-  color: #bfdbfe; /* lighter blue */
+  color: var(--color-accent);
 }
 
+/* ======================
+   Menu + Perfil Container
+====================== */
+.menuProfileWrapper {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+/* ======================
+   Menu Links
+====================== */
 .navList {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
 .navItem a {
-  color: #ffffff;
-  text-decoration: none;
+  color: var(--color-text-light);
   font-weight: 500;
-  transition: color 0.3s ease, text-decoration 0.3s ease;
-  cursor: pointer;
-  user-select: none;
-  padding-bottom: 2px;
+  text-decoration: none;
+  padding-bottom: 3px;
+  transition: all 0.3s ease;
 }
 
 .navItem a:hover {
+  color: var(--color-accent);
   text-decoration: underline;
-  color: #dbeafe; /* lighter blue */
 }
 
 .activeLink {
   font-weight: 600;
+  color: var(--color-accent);
   text-decoration: underline;
-  color: #dbeafe; /* lighter blue */
+}
+
+/* ======================
+   Perfil
+====================== */
+.profileWrapper {
+  position: relative;
+}
+.profileBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-light);
+  display: flex;
+  align-items: center;
+}
+.profileMenu {
+  position: absolute;
+  right: 0;
+  top: 3rem;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease-in-out;
+}
+.profileMenuItem {
+  background: none;
+  border: none;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: var(--color-text-dark);
+  text-align: left;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+.profileMenuItem:hover {
+  background: rgba(0, 123, 184, 0.1);
+  color: var(--color-secondary);
+}
+
+/* ======================
+   Mobile toggle
+====================== */
+.menuToggle {
+  display: none;
+  background: none;
+  border: none;
+  color: var(--color-text-light);
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+/* ======================
+   Responsividade
+====================== */
+@media (max-width: 768px) {
+  .menuToggle { display: block; }
+
+  .navList {
+    display: none;
+    flex-direction: column;
+    gap: 1rem;
+    position: absolute;
+    top: 100%;
+    right: 2rem;
+    background: var(--color-primary);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  }
+
+  .navListActive { display: flex; }
+
+  .menuProfileWrapper {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }

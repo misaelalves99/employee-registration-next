@@ -1,5 +1,7 @@
 /* src/privacy/PrivacyPage.module.css */
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+
 .main {
   display: flex;
   flex-direction: column;
@@ -7,33 +9,32 @@
   align-items: center;
   min-height: 80vh;
   padding: 3rem 2rem;
-  background-color: #f9fafb; /* fundo claro e neutro */
-  font-family: 'Inter', 'Segoe UI', 'Roboto', sans-serif;
-}
-
-.title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #111827; /* cinza escuro elegante */
-  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #f0f4f8, #e0ebf7);
+  font-family: 'Poppins', sans-serif;
   text-align: center;
 }
 
+.title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #007DB8; /* cor primária */
+  margin-bottom: 1.8rem;
+}
+
 .text {
-  font-size: 1rem;
-  color: #4b5563; /* cinza médio para leitura confortável */
-  max-width: 700px;
+  font-size: 1.05rem;
+  color: #2A9DDA; /* cor secundária */
+  max-width: 750px;
   line-height: 1.8;
-  text-align: justify;
 }
 
 @media (max-width: 768px) {
   .title {
-    font-size: 1.75rem;
+    font-size: 1.9rem;
   }
 
   .text {
-    font-size: 0.95rem;
+    font-size: 1rem;
     padding: 0 1rem;
   }
 }

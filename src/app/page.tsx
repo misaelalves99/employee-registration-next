@@ -10,8 +10,8 @@ export default function HomePage() {
         Bem-vindo ao Sistema de Funcionários
       </h1>
       <p className={styles.description}>
-        Este sistema permite o cadastro, edição e gerenciamento de funcionários da empresa.
-        Desenvolvido para gerenciar registros de desenvolvedores, gerentes e funcionários de forma simples e intuitiva.
+        Gerencie todos os funcionários da empresa de forma simples, intuitiva e profissional.
+        Cadastre, edite e visualize registros de desenvolvedores, gerentes e colaboradores com eficiência.
       </p>
 
       <Link href="/employee" className={styles.btnPrimary}>

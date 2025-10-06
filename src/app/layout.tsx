@@ -2,12 +2,10 @@
 
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Navbar from './components/navbar/Navbar';
-import Footer from './components/footer/Footer';
-import styles from './layout.module.css';
-import './globals.css';
-
 import { EmployeeProvider } from './contexts/EmployeeProvider';
+import { AuthProvider } from './contexts/AuthProvider';
+import ProtectedApp from './ProtectedApp';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -19,14 +17,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body className={`${inter.className} ${styles.body}`}>
-        <EmployeeProvider>
-          <Navbar />
-          <main className={styles.main}>
-            {children}
-          </main>
-          <Footer />
-        </EmployeeProvider>
+      <body>
+        <AuthProvider>
+          <EmployeeProvider>
+            <ProtectedApp>{children}</ProtectedApp>
+          </EmployeeProvider>
+        </AuthProvider>
       </body>
     </html>
   );

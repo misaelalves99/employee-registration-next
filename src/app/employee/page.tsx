@@ -7,6 +7,15 @@ import Link from 'next/link';
 import EmployeeFilter from '../components/employee/EmployeeFilter';
 import EmployeeDeleteModal from '../components/employee/EmployeeDeleteModal';
 import { useEmployee } from '../hooks/useEmployee';
+import { 
+  FaInfoCircle, 
+  FaEdit, 
+  FaTrash, 
+  FaUserSlash, 
+  FaUserCheck, 
+  FaPlus, 
+  FaSearch 
+} from 'react-icons/fa';
 import styles from './EmployeePage.module.css';
 
 interface EmployeeFilters {
@@ -48,9 +57,7 @@ export default function EmployeePage() {
       }
     });
 
-    // Ordena por ID crescente
     filtered.sort((a, b) => a.id - b.id);
-
     setEmployees(filtered);
   }, [allEmployees, query, filters]);
 
@@ -89,17 +96,26 @@ export default function EmployeePage() {
 
         <section className={styles.rightSection}>
           <div className={styles.topBar}>
-            <Link href="/employee/create" className={styles.btnPrimary}>
+            <Link
+              href="/employee/create"
+              className={`${styles.btnPrimary} ${styles.btnRect}`}
+              title="Novo Funcionário"
+            >
+            <FaPlus className={styles.iconSmall} />
               Novo Funcionário
             </Link>
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Buscar por nome, e-mail ou telefone..."
-              className={styles.searchInput}
-              aria-label="Campo de busca de funcionários"
-            />
+
+            <div className={styles.searchGroup}>
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Buscar por nome, e-mail ou telefone..."
+                className={styles.searchInput}
+                aria-label="Campo de busca de funcionários"
+              />
+              <FaSearch className={styles.searchIcon} />
+            </div>
           </div>
 
           {employees.length === 0 ? (
@@ -123,35 +139,46 @@ export default function EmployeePage() {
                     <td className={styles.td}>{emp.name}</td>
                     <td className={styles.td}>{emp.position}</td>
                     <td className={styles.td}>{emp.department?.name || '-'}</td>
-                    <td className={styles.td}>{emp.isActive ? 'Ativo' : 'Inativo'}</td>
+                    <td className={styles.td}>
+                      {emp.isActive ? (
+                        <span className={styles.statusActive}>Ativo</span>
+                      ) : (
+                        <span className={styles.statusInactive}>Inativo</span>
+                      )}
+                    </td>
                     <td className={`${styles.td} ${styles.actions}`}>
                       <Link
                         href={`/employee/${emp.id}`}
-                        className={`${styles.btn} ${styles.btnInfo}`}
+                        className={`${styles.btnIcon} ${styles.btnInfo}`}
+                        title="Ver Detalhes"
                       >
-                        Detalhes
+                        <FaInfoCircle />
                       </Link>
+
                       <Link
                         href={`/employee/edit/${emp.id}`}
-                        className={`${styles.btn} ${styles.btnWarning}`}
+                        className={`${styles.btnIcon} ${styles.btnWarning}`}
+                        title="Editar"
                       >
-                        Editar
+                        <FaEdit />
                       </Link>
+
                       <button
                         onClick={() => toggleActiveStatus(emp.id)}
-                        className={`${styles.btn} ${
+                        className={`${styles.btnIcon} ${
                           emp.isActive ? styles.btnSecondary : styles.btnSuccess
                         }`}
-                        aria-label={emp.isActive ? 'Inativar funcionário' : 'Ativar funcionário'}
+                        title={emp.isActive ? 'Inativar' : 'Ativar'}
                       >
-                        {emp.isActive ? 'Inativar' : 'Ativar'}
+                        {emp.isActive ? <FaUserSlash /> : <FaUserCheck />}
                       </button>
+
                       <button
                         onClick={() => openDeleteModal(emp.id)}
-                        className={`${styles.btn} ${styles.btnDanger}`}
-                        aria-label="Excluir funcionário"
+                        className={`${styles.btnIcon} ${styles.btnDanger}`}
+                        title="Excluir"
                       >
-                        Deletar
+                        <FaTrash />
                       </button>
                     </td>
                   </tr>
